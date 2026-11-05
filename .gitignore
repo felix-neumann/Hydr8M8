@@ -16,3 +16,7 @@ local.properties
 keystore/
 *.jks
 *.keystore
+
+# Private instructions for Claude Code (kept locally, never published)
+CLAUDE.md
+docs/SPEC.md

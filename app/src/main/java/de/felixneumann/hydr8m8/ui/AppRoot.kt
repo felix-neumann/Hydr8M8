@@ -120,6 +120,7 @@ fun AppRoot(vm: MainViewModel) {
         UpdateDialog(
             state = updateState,
             onDownload = vm::downloadUpdate,
+            onInstall = vm::installUpdate,
             onRetryCheck = vm::checkForUpdates,
             onDismiss = vm::dismissUpdate,
         )

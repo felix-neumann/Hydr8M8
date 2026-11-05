@@ -11,7 +11,7 @@ import de.felixneumann.hydr8m8.notifications.ReminderScheduler
 import de.felixneumann.hydr8m8.shortcuts.ShortcutPublisher
 import de.felixneumann.hydr8m8.sound.SoundPlayer
 import de.felixneumann.hydr8m8.update.GitHubReleases
-import de.felixneumann.hydr8m8.update.UpdateInstaller
+import de.felixneumann.hydr8m8.update.UpdateDownloader
 import de.felixneumann.hydr8m8.update.UpdateManager
 import de.felixneumann.hydr8m8.weather.WeatherService
 import kotlinx.coroutines.CoroutineScope
@@ -37,8 +37,9 @@ class AppContainer(
         UpdateManager(
             scope = appScope,
             installedVersionName = BuildConfig.VERSION_NAME,
+            repo = BuildConfig.GITHUB_REPO,
             releases = GitHubReleases(BuildConfig.GITHUB_REPO),
-            installer = UpdateInstaller(appContext),
+            downloader = UpdateDownloader(appContext),
         )
 }
 

@@ -244,14 +244,21 @@
     <string name="update_available_short">%1$s available</string>
     <string name="update_available_title">Update available</string>
     <string name="update_available_text">Version %1$s is available (installed: %2$s, download %3$s).</string>
-    <string name="update_install">Download &amp; install</string>
+    <string name="update_install">Download</string>
     <string name="update_later">Later</string>
     <string name="update_hide">Hide</string>
     <string name="update_downloading">Downloading version %1$s</string>
     <string name="update_progress">%1$s of %2$s · %3$d %%</string>
-    <string name="update_installing">Starting installation…</string>
     <string name="update_failed">Update failed</string>
     <string name="update_failed_short">Failed</string>
-    <string name="update_failed_unknown">Unknown error. Please try again.</string>
     <string name="update_retry">Try again</string>
+    <string name="update_ready_short">Ready to install</string>
+    <string name="update_ready_title">Version %1$s downloaded</string>
+    <string name="update_ready_text">The file was checked (signed by Hydr8M8, newer version). Tap \"Open downloads\" and then the file Hydr8M8-….apk – Android installs the update. Your data is kept.</string>
+    <string name="update_open_downloads">Open downloads</string>
+    <string name="update_error_network">Could not reach GitHub. Check your internet connection.</string>
+    <string name="update_error_untrusted">The download does not come from the official Hydr8M8 repository and was blocked.</string>
+    <string name="update_error_download">The download failed. Please try again.</string>
+    <string name="update_error_signature">The downloaded file is not signed with the Hydr8M8 key. It was deleted and not installed.</string>
+    <string name="update_error_invalid">The downloaded file is not a valid newer Hydr8M8 version. It was deleted.</string>
 </resources>

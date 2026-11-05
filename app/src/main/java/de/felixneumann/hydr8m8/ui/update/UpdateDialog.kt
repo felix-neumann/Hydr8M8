@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.sp
 import de.felixneumann.hydr8m8.R
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.update.ReleaseInfo
+import de.felixneumann.hydr8m8.update.UpdateFailure
 import de.felixneumann.hydr8m8.update.UpdateState
 
 /** Popup for the update flow: offer, download progress, install hand-off, result and errors. */
@@ -27,6 +28,7 @@ import de.felixneumann.hydr8m8.update.UpdateState
 fun UpdateDialog(
     state: UpdateState,
     onDownload: (ReleaseInfo) -> Unit,
+    onInstall: () -> Unit,
     onRetryCheck: () -> Unit,
     onDismiss: () -> Unit,
     modifier: Modifier = Modifier,
@@ -108,13 +110,16 @@ fun UpdateDialog(
             )
         }
 
-        UpdateState.Installing -> {
-            ProgressDialog(
-                stringResource(R.string.update_installing),
-                progress = null,
-                detail = null,
-                onDismiss,
-                modifier,
+        is UpdateState.ReadyToInstall -> {
+            AlertDialog(
+                onDismissRequest = onDismiss,
+                modifier = modifier,
+                title = { Text(stringResource(R.string.update_ready_title, state.release.version.toString())) },
+                text = { Text(stringResource(R.string.update_ready_text)) },
+                confirmButton = {
+                    TextButton(onClick = onInstall) { Text(stringResource(R.string.update_open_downloads)) }
+                },
+                dismissButton = dismissButton,
             )
         }
 
@@ -123,7 +128,7 @@ fun UpdateDialog(
                 onDismissRequest = onDismiss,
                 modifier = modifier,
                 title = { Text(stringResource(R.string.update_failed)) },
-                text = { Text(state.message ?: stringResource(R.string.update_failed_unknown)) },
+                text = { Text(stringResource(failureText(state.failure))) },
                 confirmButton = {
                     TextButton(onClick = { state.release?.let(onDownload) ?: onRetryCheck() }) {
                         Text(stringResource(R.string.update_retry))
@@ -134,6 +139,15 @@ fun UpdateDialog(
         }
     }
 }
+
+private fun failureText(failure: UpdateFailure): Int =
+    when (failure) {
+        UpdateFailure.NETWORK -> R.string.update_error_network
+        UpdateFailure.UNTRUSTED_SOURCE -> R.string.update_error_untrusted
+        UpdateFailure.DOWNLOAD -> R.string.update_error_download
+        UpdateFailure.WRONG_SIGNATURE -> R.string.update_error_signature
+        UpdateFailure.INVALID_FILE -> R.string.update_error_invalid
+    }
 
 /** Dialog with a determinate ([progress] in 0..1) or indeterminate (null) progress bar. */
 @Composable

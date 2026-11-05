@@ -75,7 +75,9 @@ class MainViewModel(
 
     fun checkForUpdates() = c.updates.check(manual = true)
 
-    fun downloadUpdate(release: ReleaseInfo) = c.updates.downloadAndInstall(release)
+    fun downloadUpdate(release: ReleaseInfo) = c.updates.download(release)
+
+    fun installUpdate() = c.updates.install()
 
     fun dismissUpdate() = c.updates.dismiss()
 

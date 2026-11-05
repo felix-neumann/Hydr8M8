@@ -312,7 +312,7 @@ private fun updateStatusText(state: UpdateState): String =
         is UpdateState.UpToDate -> stringResource(R.string.update_up_to_date)
         is UpdateState.Available -> stringResource(R.string.update_available_short, state.release.version.toString())
         is UpdateState.Downloading -> "${(state.progress * 100).toInt()} %"
-        UpdateState.Installing -> stringResource(R.string.update_installing)
+        is UpdateState.ReadyToInstall -> stringResource(R.string.update_ready_short)
         is UpdateState.Failed -> stringResource(R.string.update_failed_short)
     }
 

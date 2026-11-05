@@ -242,14 +242,21 @@
     <string name="update_available_short">%1$s verfügbar</string>
     <string name="update_available_title">Update verfügbar</string>
     <string name="update_available_text">Version %1$s ist verfügbar (installiert: %2$s, Download %3$s).</string>
-    <string name="update_install">Herunterladen &amp; installieren</string>
+    <string name="update_install">Herunterladen</string>
     <string name="update_later">Später</string>
     <string name="update_hide">Ausblenden</string>
     <string name="update_downloading">Lade Version %1$s herunter</string>
     <string name="update_progress">%1$s von %2$s · %3$d %%</string>
-    <string name="update_installing">Installation wird gestartet…</string>
     <string name="update_failed">Update fehlgeschlagen</string>
     <string name="update_failed_short">Fehler</string>
-    <string name="update_failed_unknown">Unbekannter Fehler. Bitte erneut versuchen.</string>
     <string name="update_retry">Erneut versuchen</string>
+    <string name="update_ready_short">Bereit zur Installation</string>
+    <string name="update_ready_title">Version %1$s heruntergeladen</string>
+    <string name="update_ready_text">Die Datei wurde geprüft (von Hydr8M8 signiert, neuere Version). Tippe auf „Downloads öffnen“ und dann auf die Datei Hydr8M8-….apk – Android installiert das Update. Deine Daten bleiben erhalten.</string>
+    <string name="update_open_downloads">Downloads öffnen</string>
+    <string name="update_error_network">GitHub ist nicht erreichbar. Prüfe deine Internetverbindung.</string>
+    <string name="update_error_untrusted">Der Download stammt nicht aus dem offiziellen Hydr8M8-Repository und wurde blockiert.</string>
+    <string name="update_error_download">Der Download ist fehlgeschlagen. Bitte erneut versuchen.</string>
+    <string name="update_error_signature">Die heruntergeladene Datei ist nicht mit dem Hydr8M8-Schlüssel signiert. Sie wurde gelöscht und nicht installiert.</string>
+    <string name="update_error_invalid">Die heruntergeladene Datei ist keine gültige, neuere Hydr8M8-Version. Sie wurde gelöscht.</string>
 </resources>

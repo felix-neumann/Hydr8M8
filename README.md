@@ -24,7 +24,7 @@ Download the latest `Hydr8M8-<version>.apk` from [Releases](../../releases) and 
 
 ## Development
 
-See [CLAUDE.md](CLAUDE.md) for commands and architecture and [docs/SPEC.md](docs/SPEC.md) for the product rules.
+Requires Android Studio's JDK (JDK 17+ with `javac`) and the Android SDK (API 37).
 
 ```sh
 ./gradlew testDebugUnitTest spotlessCheck lintDebug assembleDebug
@@ -32,4 +32,6 @@ See [CLAUDE.md](CLAUDE.md) for commands and architecture and [docs/SPEC.md](docs
 
 ## License
 
-[MIT](LICENSE)
+[PolyForm Noncommercial 1.0.0](LICENSE.md): you may use, study, change and share Hydr8M8 for any **non-commercial** purpose (personal use, hobby projects, research, education, charitable organisations). Any commercial use, including selling the app or a fork, is not permitted. Versions published before 2026-11-06 were released under the MIT License.
+
+Found a security issue? See [SECURITY.md](SECURITY.md).

@@ -62,7 +62,9 @@ class WidgetConfigActivity : ComponentActivity() {
         val widgetId =
             intent?.extras?.getInt(AppWidgetManager.EXTRA_APPWIDGET_ID, AppWidgetManager.INVALID_APPWIDGET_ID)
                 ?: AppWidgetManager.INVALID_APPWIDGET_ID
-        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) {
+        // The activity is exported (required for APPWIDGET_CONFIGURE), so only accept ids of
+        // widgets that really belong to this app.
+        if (!isOwnWidget(widgetId)) {
             finish()
             return
         }
@@ -73,6 +75,12 @@ class WidgetConfigActivity : ComponentActivity() {
                 ConfigScreen(widgetId, onDone = { finish() })
             }
         }
+    }
+
+    private fun isOwnWidget(widgetId: Int): Boolean {
+        if (widgetId == AppWidgetManager.INVALID_APPWIDGET_ID) return false
+        val provider = AppWidgetManager.getInstance(this).getAppWidgetInfo(widgetId)?.provider ?: return false
+        return provider.packageName == packageName && provider.className == HydrationWidgetReceiver::class.java.name
     }
 }
 

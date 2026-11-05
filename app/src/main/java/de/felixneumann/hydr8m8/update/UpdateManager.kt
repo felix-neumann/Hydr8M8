@@ -8,6 +8,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
+/** Why an update step failed; mapped to a localized message by the UI. */
+enum class UpdateFailure { NETWORK, UNTRUSTED_SOURCE, DOWNLOAD, WRONG_SIGNATURE, INVALID_FILE }
+
 sealed interface UpdateState {
     data object Idle : UpdateState
 
@@ -27,27 +30,38 @@ sealed interface UpdateState {
         val downloadedBytes: Long,
         val totalBytes: Long,
     ) : UpdateState {
-        val progress: Float get() = if (totalBytes > 0) downloadedBytes.toFloat() / totalBytes else 0f
+        val progress: Float get() =
+            if (totalBytes >
+                0
+            ) {
+                (downloadedBytes.toFloat() / totalBytes).coerceIn(0f, 1f)
+            } else {
+                0f
+            }
     }
 
-    data object Installing : UpdateState
+    /** Downloaded and verified; the system installer takes over from the Downloads app. */
+    data class ReadyToInstall(
+        val release: ReleaseInfo,
+    ) : UpdateState
 
     data class Failed(
-        val message: String?,
+        val failure: UpdateFailure,
         val release: ReleaseInfo? = null,
     ) : UpdateState
 }
 
 /**
- * Checks GitHub for a newer release, downloads it with progress and starts the installation.
- * [dialogVisible] drives the update popup: shown when an update is found, for manual checks and
- * while downloading or failing.
+ * Checks GitHub for a newer release, downloads it with progress and verifies it before handing it
+ * to the system installer. [dialogVisible] drives the update popup: shown when an update is found,
+ * for manual checks, and while downloading or failing.
  */
 class UpdateManager(
     private val scope: CoroutineScope,
     private val installedVersionName: String,
+    private val repo: String,
     private val releases: GitHubReleases,
-    private val installer: UpdateInstaller,
+    private val downloader: UpdateDownloader,
 ) {
     private val _state = MutableStateFlow<UpdateState>(UpdateState.Idle)
     val state: StateFlow<UpdateState> = _state.asStateFlow()
@@ -74,51 +88,80 @@ class UpdateManager(
                 _state.value = UpdateState.Checking
                 val result =
                     runCatching { releases.latest() }.fold(
-                        onSuccess = { release ->
-                            if (release.version > installed) {
-                                UpdateState.Available(release, installed)
-                            } else {
-                                UpdateState.UpToDate(installed)
-                            }
-                        },
-                        onFailure = { UpdateState.Failed(it.message) },
+                        onSuccess = { release -> evaluate(release) },
+                        onFailure = { UpdateState.Failed(UpdateFailure.NETWORK) },
                     )
                 _state.value = result
                 if (manual || result is UpdateState.Available) _dialogVisible.value = true
             }
     }
 
-    /** Downloads and installs [release]. Requires the "install unknown apps" permission. */
-    fun downloadAndInstall(release: ReleaseInfo) {
-        if (!installer.canInstall()) {
-            installer.openInstallPermissionSettings()
+    private fun evaluate(release: ReleaseInfo): UpdateState =
+        when {
+            release.version <= installed -> {
+                downloader.removePrevious() // the downloaded file is no longer needed
+                UpdateState.UpToDate(installed)
+            }
+
+            !UpdateVerification.isTrustedAssetUrl(release.apkUrl, repo) -> {
+                UpdateState.Failed(UpdateFailure.UNTRUSTED_SOURCE, release)
+            }
+
+            else -> {
+                UpdateState.Available(release, installed)
+            }
+        }
+
+    /** Downloads and verifies [release]; afterwards the user installs it via the system. */
+    fun download(release: ReleaseInfo) {
+        if (job?.isActive == true) return
+        if (!UpdateVerification.isTrustedAssetUrl(release.apkUrl, repo)) {
+            _state.value = UpdateState.Failed(UpdateFailure.UNTRUSTED_SOURCE, release)
             return
         }
-        if (job?.isActive == true) return
         _dialogVisible.value = true
         job =
             scope.launch {
-                runCatching {
-                    _state.value = UpdateState.Downloading(release, 0, release.apkSizeBytes)
-                    val apk =
-                        installer.download(release.apkUrl, release.apkSizeBytes) { done, total ->
+                _state.value = UpdateState.Downloading(release, 0, release.apkSizeBytes)
+                val outcome =
+                    runCatching {
+                        downloader.download(release) { done, total ->
                             _state.value = UpdateState.Downloading(release, done, total)
                         }
-                    _state.value = UpdateState.Installing
-                    installer.install(apk)
-                }.onFailure { _state.value = UpdateState.Failed(it.message, release) }
+                    }.getOrElse { DownloadOutcome.Failed(-1) }
+                _state.value =
+                    when (outcome) {
+                        DownloadOutcome.Verified -> {
+                            UpdateState.ReadyToInstall(release)
+                        }
+
+                        is DownloadOutcome.Failed -> {
+                            UpdateState.Failed(UpdateFailure.DOWNLOAD, release)
+                        }
+
+                        is DownloadOutcome.Rejected -> {
+                            UpdateState.Failed(
+                                if (outcome.reason == UpdateVerification.Result.WrongSigner) {
+                                    UpdateFailure.WRONG_SIGNATURE
+                                } else {
+                                    UpdateFailure.INVALID_FILE
+                                },
+                            )
+                        }
+                    }
+                _dialogVisible.value = true
             }
     }
 
-    fun onInstallFailed(message: String?) {
-        _state.value = UpdateState.Failed(message)
-        _dialogVisible.value = true
+    /** Hands over to the system: the user taps the downloaded APK to install it. */
+    fun install() {
+        downloader.openDownloads()
+        _dialogVisible.value = false
     }
 
     fun dismiss() {
         _dialogVisible.value = false
-        if (_state.value !is UpdateState.Downloading && _state.value !is UpdateState.Installing) {
-            job?.cancel()
-        }
+        // A running download continues in the background (system notification).
+        if (_state.value !is UpdateState.Downloading) job?.cancel()
     }
 }
