@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawingPadding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
@@ -66,6 +67,7 @@ fun OnboardingScreen(
     library: List<Preset>,
     onFinish: (goalMl: Int, schedule: WakeSchedule, homeIds: List<Long>) -> Unit,
     onLocationGrant: () -> Unit,
+    onCreatePreset: (Preset, (Long) -> Unit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var step by rememberSaveable { mutableIntStateOf(0) }
@@ -76,6 +78,7 @@ fun OnboardingScreen(
     Column(
         modifier
             .fillMaxSize()
+            .safeDrawingPadding()
             .verticalScroll(rememberScrollState())
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
@@ -85,10 +88,24 @@ fun OnboardingScreen(
         MateView(if (step == STEPS - 1) MateMood.CHAMPION else MateMood.HAPPY, size = 96.dp)
         Spacer(Modifier.height(12.dp))
         when (step) {
-            0 -> GoalStep(goal) { goal = it }
-            1 -> ScheduleStep(schedule) { schedule = it }
-            2 -> HomeStep(homeIds.mapNotNull { id -> library.find { it.id == id } }, library) { homeIds = it }
-            else -> PermissionStep(onLocationGrant)
+            0 -> {
+                GoalStep(goal) { goal = it }
+            }
+
+            1 -> {
+                ScheduleStep(schedule) { schedule = it }
+            }
+
+            2 -> {
+                HomeStep(homeIds.mapNotNull { id -> library.find { it.id == id } }, library, onCreatePreset) {
+                    homeIds =
+                        it
+                }
+            }
+
+            else -> {
+                PermissionStep(onLocationGrant)
+            }
         }
         Spacer(Modifier.height(24.dp))
         Row(horizontalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxWidth()) {
@@ -183,10 +200,11 @@ private fun ScheduleStep(
 private fun HomeStep(
     selected: List<Preset>,
     library: List<Preset>,
+    onCreatePreset: (Preset, (Long) -> Unit) -> Unit,
     onChange: (List<Long>) -> Unit,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     Title(stringResource(R.string.onboarding_home_title), stringResource(R.string.onboarding_home_text))
-    SectionCard { SurfaceEditor(selected, library, Surfaces.MAX_HOME, onChange) }
+    SectionCard { SurfaceEditor(selected, library, Surfaces.MAX_HOME, onChange, onCreatePreset = onCreatePreset) }
 }
 
 @Composable

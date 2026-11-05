@@ -1,6 +1,7 @@
 package de.felixneumann.hydr8m8.ui.theme
 
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.darkColorScheme
 import androidx.compose.material3.lightColorScheme
@@ -10,6 +11,7 @@ import androidx.compose.runtime.Immutable
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import de.felixneumann.hydr8m8.data.ThemeMode
 import de.felixneumann.hydr8m8.domain.CalendarLevel
 import de.felixneumann.hydr8m8.domain.DrinkKind
 
@@ -148,10 +150,23 @@ fun Hydr8M8Theme(
     darkTheme: Boolean = isSystemInDarkTheme(),
     content: @Composable () -> Unit,
 ) {
+    val scheme = if (darkTheme) DarkScheme else LightScheme
     CompositionLocalProvider(LocalHydrColors provides if (darkTheme) DarkHydr else LightHydr) {
-        MaterialTheme(colorScheme = if (darkTheme) DarkScheme else LightScheme, content = content)
+        MaterialTheme(colorScheme = scheme) {
+            // Text outside of Surfaces (e.g. on the gradient background) must not fall back to black.
+            CompositionLocalProvider(LocalContentColor provides scheme.onBackground, content = content)
+        }
     }
 }
+
+/** Resolves the user's design setting. */
+@Composable
+fun ThemeMode.isDark(): Boolean =
+    when (this) {
+        ThemeMode.SYSTEM -> isSystemInDarkTheme()
+        ThemeMode.LIGHT -> false
+        ThemeMode.DARK -> true
+    }
 
 object HydrTheme {
     val colors: HydrColors

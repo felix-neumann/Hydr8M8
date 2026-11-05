@@ -133,6 +133,14 @@ class MainViewModel(
         }
     }
 
+    /** Adds a new preset to the library and reports its id (e.g. to select it on a surface). */
+    fun createPreset(
+        preset: Preset,
+        onCreated: (Long) -> Unit,
+    ) {
+        viewModelScope.launch { onCreated(repo.savePreset(preset)) }
+    }
+
     fun deletePreset(preset: Preset) {
         viewModelScope.launch {
             repo.deletePreset(preset)

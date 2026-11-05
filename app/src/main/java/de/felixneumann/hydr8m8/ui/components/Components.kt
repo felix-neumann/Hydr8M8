@@ -291,9 +291,12 @@ fun SurfaceEditor(
     max: Int,
     onChange: (List<Long>) -> Unit,
     modifier: Modifier = Modifier,
+    onCreatePreset: ((Preset, (Long) -> Unit) -> Unit)? = null,
 ) {
     var showPicker by remember { mutableStateOf(false) }
+    var creating by remember { mutableStateOf(false) }
     val currentSelected by rememberUpdatedState(selected)
+    val currentOnChange by rememberUpdatedState(onChange)
     Column(modifier) {
         ReorderableColumn(
             items = selected,
@@ -340,6 +343,23 @@ fun SurfaceEditor(
                 showPicker = false
             },
             onDismiss = { showPicker = false },
+            onCreateNew =
+                onCreatePreset?.let {
+                    {
+                        showPicker = false
+                        creating = true
+                    }
+                },
+        )
+    }
+    if (creating && onCreatePreset != null) {
+        PresetEditDialog(
+            preset = newPreset(),
+            onSave = { preset ->
+                creating = false
+                onCreatePreset(preset) { id -> currentOnChange(currentSelected.map { it.id } + id) }
+            },
+            onDismiss = { creating = false },
         )
     }
 }
@@ -349,10 +369,15 @@ fun PresetPickerDialog(
     presets: List<Preset>,
     onPick: (Preset) -> Unit,
     onDismiss: () -> Unit,
+    onCreateNew: (() -> Unit)? = null,
 ) {
     AlertDialog(
         onDismissRequest = onDismiss,
-        confirmButton = {},
+        confirmButton = {
+            if (onCreateNew != null) {
+                TextButton(onClick = onCreateNew) { Text(stringResource(R.string.create_own_amount)) }
+            }
+        },
         dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
         title = { Text(stringResource(R.string.choose_amount)) },
         text = {
@@ -458,5 +483,41 @@ fun TintedIcon(
         contentDescription = null,
         colorFilter = ColorFilter.tint(tint),
         modifier = modifier.size(size),
+    )
+}
+
+/** Single-choice dialog with radio buttons. */
+@Composable
+fun <T> ChoiceDialog(
+    title: String,
+    options: List<Pair<T, String>>,
+    selected: T,
+    onSelect: (T) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(title) },
+        text = {
+            Column {
+                options.forEach { (value, label) ->
+                    Row(
+                        Modifier
+                            .fillMaxWidth()
+                            .clickable { onSelect(value) }
+                            .padding(vertical = 6.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        androidx.compose.material3.RadioButton(selected = value == selected, onClick = {
+                            onSelect(value)
+                        })
+                        Spacer(Modifier.width(8.dp))
+                        Text(label)
+                    }
+                }
+            }
+        },
+        confirmButton = {},
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
     )
 }

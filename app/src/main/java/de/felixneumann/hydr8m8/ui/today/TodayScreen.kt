@@ -56,6 +56,7 @@ import de.felixneumann.hydr8m8.domain.MateMood
 import de.felixneumann.hydr8m8.domain.Preset
 import de.felixneumann.hydr8m8.domain.StreakState
 import de.felixneumann.hydr8m8.ui.Format
+import de.felixneumann.hydr8m8.ui.components.LiquidGlass
 import de.felixneumann.hydr8m8.ui.components.MateView
 import de.felixneumann.hydr8m8.ui.components.Pill
 import de.felixneumann.hydr8m8.ui.components.PresetTile
@@ -108,9 +109,11 @@ fun TodayScreen(
             contentAlignment = Alignment.Center,
         ) {
             Box(Modifier.size(width = 170.dp, height = 230.dp)) {
-                Glass(
+                val slope by rememberLiquidSlope()
+                LiquidGlass(
                     fraction = if (today.goalMl > 0) today.waterMl.toFloat() / today.goalMl else 0f,
-                    percent = today.percent,
+                    label = "${today.percent} %",
+                    slope = slope,
                     modifier = Modifier.fillMaxSize().padding(top = 24.dp),
                 )
                 MateView(
@@ -200,95 +203,3 @@ private fun GoalLine(
         modifier = modifier,
     )
 }
-
-/** Tapered glass whose animated water level shows progress. */
-@Composable
-fun Glass(
-    fraction: Float,
-    percent: Int,
-    modifier: Modifier = Modifier,
-) {
-    val colors = HydrTheme.colors
-    val level by animateFloatAsState(
-        targetValue = fraction.coerceIn(0f, 1f),
-        animationSpec = spring(dampingRatio = 0.6f, stiffness = 60f),
-        label = "level",
-    )
-    val transition = rememberInfiniteTransition(label = "wave")
-    val phase by transition.animateFloat(
-        initialValue = 0f,
-        targetValue = (2 * PI).toFloat(),
-        animationSpec = infiniteRepeatable(tween(WAVE_PERIOD_MS, easing = LinearEasing), RepeatMode.Restart),
-        label = "phase",
-    )
-    Box(modifier, contentAlignment = Alignment.Center) {
-        Canvas(Modifier.fillMaxSize()) {
-            val w = size.width
-            val h = size.height
-            val stroke = 3.dp.toPx()
-            val taper = w * 0.12f
-            val outline =
-                Path().apply {
-                    moveTo(stroke, stroke)
-                    lineTo(w - stroke, stroke)
-                    lineTo(w - taper, h - stroke)
-                    lineTo(taper, h - stroke)
-                    close()
-                }
-            val waterTop = h - stroke - (h - 2 * stroke) * level
-            clipPath(outline) {
-                if (level > 0f) {
-                    for (layer in 0..1) {
-                        val amp = h * if (layer == 0) 0.022f else 0.016f
-                        val shift = if (layer == 0) phase else -phase * 1.3f
-                        val wave =
-                            Path().apply {
-                                moveTo(0f, h)
-                                lineTo(0f, waterTop)
-                                var x = 0f
-                                while (x <= w) {
-                                    lineTo(x, waterTop + amp * sin(x / w * 2 * PI.toFloat() * 1.5f + shift))
-                                    x += 4f
-                                }
-                                lineTo(w, h)
-                                close()
-                            }
-                        drawPath(
-                            wave,
-                            brush =
-                                if (layer == 0) {
-                                    Brush.verticalGradient(
-                                        listOf(colors.waterLight, colors.waterDeep),
-                                        startY = waterTop,
-                                        endY = h,
-                                    )
-                                } else {
-                                    SolidColor(colors.waterDeep.copy(alpha = 0.5f))
-                                },
-                        )
-                    }
-                    // A few bubbles for life.
-                    val bubbleY = waterTop + (h - waterTop) * (0.5f + 0.3f * sin(phase))
-                    if (bubbleY < h - stroke * 3) {
-                        drawCircle(
-                            colors.glassStroke.copy(alpha = 0.6f),
-                            radius = 3.dp.toPx(),
-                            center = Offset(w * 0.35f, bubbleY),
-                        )
-                    }
-                }
-            }
-            drawPath(outline, colors.glassStroke, style = Stroke(width = stroke, join = StrokeJoin.Round))
-        }
-        Text(
-            "$percent %",
-            fontSize = 26.sp,
-            fontWeight = FontWeight.Bold,
-            color = if (level > TEXT_ON_WATER_LEVEL) Color.White else MaterialTheme.colorScheme.onBackground,
-            modifier = Modifier.padding(top = 60.dp),
-        )
-    }
-}
-
-private const val WAVE_PERIOD_MS = 2600
-private const val TEXT_ON_WATER_LEVEL = 0.45f

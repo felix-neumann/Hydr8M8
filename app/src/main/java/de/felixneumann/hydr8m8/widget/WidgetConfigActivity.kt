@@ -37,7 +37,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.felixneumann.hydr8m8.R
+import de.felixneumann.hydr8m8.applySystemBars
 import de.felixneumann.hydr8m8.container
+import de.felixneumann.hydr8m8.data.ThemeMode
 import de.felixneumann.hydr8m8.data.WidgetBackground
 import de.felixneumann.hydr8m8.data.WidgetConfig
 import de.felixneumann.hydr8m8.domain.Surfaces
@@ -49,6 +51,7 @@ import de.felixneumann.hydr8m8.ui.components.SurfaceEditor
 import de.felixneumann.hydr8m8.ui.components.SwitchRow
 import de.felixneumann.hydr8m8.ui.theme.Hydr8M8Theme
 import de.felixneumann.hydr8m8.ui.theme.HydrTheme
+import de.felixneumann.hydr8m8.ui.theme.isDark
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 
@@ -67,7 +70,10 @@ class WidgetConfigActivity : ComponentActivity() {
         // Placing the widget without saving still keeps it (configuration is optional).
         setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         setContent {
-            Hydr8M8Theme {
+            val settings by container.settings.settings.collectAsStateWithLifecycle(initialValue = null)
+            val dark = (settings?.themeMode ?: ThemeMode.SYSTEM).isDark()
+            LaunchedEffect(dark) { applySystemBars(dark) }
+            Hydr8M8Theme(darkTheme = dark) {
                 ConfigScreen(widgetId, onDone = { finish() })
             }
         }
@@ -109,9 +115,13 @@ private fun ConfigScreen(
             color = MaterialTheme.colorScheme.onBackground,
         )
         SectionCard(title = stringResource(R.string.widget_buttons)) {
-            SurfaceEditor(selected, library, Surfaces.MAX_WIDGET, onChange = { ids ->
-                scope.launch { c.repository.setSurface(key, ids) }
-            })
+            SurfaceEditor(
+                selected,
+                library,
+                Surfaces.MAX_WIDGET,
+                onChange = { ids -> scope.launch { c.repository.setSurface(key, ids) } },
+                onCreatePreset = { preset, onCreated -> scope.launch { onCreated(c.repository.savePreset(preset)) } },
+            )
         }
         SectionCard {
             SwitchRow(stringResource(R.string.widget_show_mate), cfg.showMate, { config = cfg.copy(showMate = it) })

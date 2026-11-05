@@ -51,8 +51,10 @@ import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.components.DrinkIconView
 import de.felixneumann.hydr8m8.ui.components.HintText
+import de.felixneumann.hydr8m8.ui.components.PresetEditDialog
 import de.felixneumann.hydr8m8.ui.components.SectionCard
 import de.felixneumann.hydr8m8.ui.components.SurfaceEditor
+import de.felixneumann.hydr8m8.ui.components.newPreset
 import de.felixneumann.hydr8m8.ui.label
 import kotlin.math.roundToInt
 
@@ -117,29 +119,7 @@ fun PresetLibraryScreen(
                 }
                 TextButton(onClick = {
                     val icon = DrinkIcon.forKind(kind).first()
-                    editing =
-                        Preset(
-                            0,
-                            kind,
-                            if (kind ==
-                                DrinkKind.WATER
-                            ) {
-                                250
-                            } else {
-                                330
-                            },
-                            if (kind ==
-                                DrinkKind.ALCOHOL
-                            ) {
-                                5.0
-                            } else {
-                                null
-                            },
-                            icon,
-                            null,
-                            false,
-                            0,
-                        )
+                    editing = newPreset(kind)
                 }) {
                     Icon(Icons.Default.Add, null)
                     Spacer(Modifier.width(6.dp))
@@ -171,86 +151,12 @@ fun PresetLibraryScreen(
 }
 
 @Composable
-private fun PresetEditDialog(
-    preset: Preset,
-    onSave: (Preset) -> Unit,
-    onDelete: (() -> Unit)?,
-    onDismiss: () -> Unit,
-) {
-    var icon by remember { mutableStateOf(preset.icon) }
-    var volume by remember { mutableIntStateOf(preset.volumeMl) }
-    var abv by remember { mutableDoubleStateOf(preset.abvPercent ?: 5.0) }
-    val alcohol = preset.kind == DrinkKind.ALCOHOL
-    val max = if (alcohol) 1000 else 2000
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(stringResource(if (preset.id == 0L) R.string.new_preset else R.string.edit_preset)) },
-        text = {
-            Column {
-                LazyRow(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                    items(DrinkIcon.forKind(preset.kind)) { option ->
-                        Surface(
-                            onClick = { icon = option },
-                            shape = RoundedCornerShape(10.dp),
-                            color =
-                                if (icon ==
-                                    option
-                                ) {
-                                    MaterialTheme.colorScheme.primaryContainer
-                                } else {
-                                    Color.Transparent
-                                },
-                            border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                        ) { DrinkIconView(option, size = 26.dp, modifier = Modifier.padding(6.dp)) }
-                    }
-                }
-                Text(
-                    Format.volume(volume),
-                    fontSize = 28.sp,
-                    fontWeight = FontWeight.Bold,
-                    modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 12.dp),
-                )
-                Slider(
-                    value = volume.toFloat(),
-                    onValueChange = { volume = ((it / 10).roundToInt() * 10).coerceIn(10, max) },
-                    valueRange = 10f..max.toFloat(),
-                )
-                if (alcohol) {
-                    Text(stringResource(R.string.abv_label, Format.abv(abv)))
-                    Slider(
-                        value = abv.toFloat(),
-                        onValueChange = { abv = ((it * 2).roundToInt() / 2.0).coerceIn(0.5, 70.0) },
-                        valueRange = 0.5f..70f,
-                    )
-                }
-            }
-        },
-        confirmButton = {
-            TextButton(onClick = {
-                onSave(preset.copy(icon = icon, volumeMl = volume, abvPercent = if (alcohol) abv else null))
-            }) {
-                Text(stringResource(R.string.save))
-            }
-        },
-        dismissButton = {
-            Row {
-                if (onDelete != null) {
-                    TextButton(onClick = onDelete) {
-                        Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
-                    }
-                }
-                TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-            }
-        },
-    )
-}
-
-@Composable
 fun SurfaceEditorScreen(
     surface: String,
     selected: List<Preset>,
     library: List<Preset>,
     onChange: (List<Long>) -> Unit,
+    onCreatePreset: (Preset, (Long) -> Unit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     Column(
@@ -262,7 +168,7 @@ fun SurfaceEditorScreen(
     ) {
         HintText(stringResource(surfaceHint(surface), Surfaces.maxFor(surface)))
         SectionCard {
-            SurfaceEditor(selected, library, Surfaces.maxFor(surface), onChange)
+            SurfaceEditor(selected, library, Surfaces.maxFor(surface), onChange, onCreatePreset = onCreatePreset)
         }
     }
 }

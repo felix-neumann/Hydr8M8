@@ -29,9 +29,11 @@ import androidx.lifecycle.compose.LifecycleEventEffect
 import de.felixneumann.hydr8m8.BuildConfig
 import de.felixneumann.hydr8m8.R
 import de.felixneumann.hydr8m8.data.AppSettings
+import de.felixneumann.hydr8m8.data.ThemeMode
 import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.domain.WakeWindow
 import de.felixneumann.hydr8m8.ui.Format
+import de.felixneumann.hydr8m8.ui.components.ChoiceDialog
 import de.felixneumann.hydr8m8.ui.components.SectionCard
 import de.felixneumann.hydr8m8.ui.components.SettingRow
 import de.felixneumann.hydr8m8.ui.components.SwitchRow
@@ -59,6 +61,8 @@ fun SettingsScreen(
 ) {
     val context = LocalContext.current
     var timeField by remember { mutableStateOf<TimeField?>(null) }
+    var showThemeDialog by remember { mutableStateOf(false) }
+    var showLanguageDialog by remember { mutableStateOf(false) }
     var numberField by remember { mutableStateOf<NumberField?>(null) }
     // Re-read permission state whenever we come back from system settings.
     var permissionTick by remember { mutableIntStateOf(0) }
@@ -209,6 +213,18 @@ fun SettingsScreen(
             )
         }
 
+        SectionCard(title = stringResource(R.string.section_appearance)) {
+            SettingRow(stringResource(R.string.design), stringResource(themeLabel(settings.themeMode)), {
+                showThemeDialog =
+                    true
+            })
+            SettingRow(
+                stringResource(R.string.language),
+                languageLabel(AppLanguage.current(context)),
+                { showLanguageDialog = true },
+            )
+        }
+
         SectionCard(title = stringResource(R.string.section_permissions)) {
             SettingRow(
                 stringResource(R.string.perm_notifications),
@@ -263,10 +279,52 @@ fun SettingsScreen(
         )
     }
 
+    if (showThemeDialog) {
+        ChoiceDialog(
+            title = stringResource(R.string.design),
+            options = ThemeMode.entries.map { it to stringResource(themeLabel(it)) },
+            selected = settings.themeMode,
+            onSelect = { mode ->
+                onUpdate { it.copy(themeMode = mode) }
+                showThemeDialog = false
+            },
+            onDismiss = { showThemeDialog = false },
+        )
+    }
+
+    if (showLanguageDialog) {
+        ChoiceDialog(
+            title = stringResource(R.string.language),
+            options = AppLanguage.supported.map { it to languageLabel(it) },
+            selected = AppLanguage.current(context),
+            onSelect = { tag ->
+                showLanguageDialog = false
+                AppLanguage.set(context, tag)
+            },
+            onDismiss = { showLanguageDialog = false },
+        )
+    }
+
     numberField?.let { field ->
         NumberDialog(field, settings, currentGoalMl, onUpdate, onSetGoal) { numberField = null }
     }
 }
+
+private fun themeLabel(mode: ThemeMode): Int =
+    when (mode) {
+        ThemeMode.SYSTEM -> R.string.theme_system
+        ThemeMode.LIGHT -> R.string.theme_light
+        ThemeMode.DARK -> R.string.theme_dark
+    }
+
+/** Language names are shown in their own language; "system" is localized. */
+@Composable
+private fun languageLabel(tag: String): String =
+    when (tag) {
+        "de" -> "Deutsch"
+        "en" -> "English"
+        else -> stringResource(R.string.language_system)
+    }
 
 private fun applyTime(
     s: AppSettings,

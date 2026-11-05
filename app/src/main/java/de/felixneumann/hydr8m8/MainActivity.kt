@@ -2,6 +2,7 @@ package de.felixneumann.hydr8m8
 
 import android.os.Bundle
 import androidx.activity.ComponentActivity
+import androidx.activity.SystemBarStyle
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -49,6 +50,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import de.felixneumann.hydr8m8.data.ThemeMode
 import de.felixneumann.hydr8m8.domain.Entry
 import de.felixneumann.hydr8m8.domain.MateMood
 import de.felixneumann.hydr8m8.domain.Preset
@@ -66,11 +68,23 @@ import de.felixneumann.hydr8m8.ui.settings.surfaceTitle
 import de.felixneumann.hydr8m8.ui.stats.StatsScreen
 import de.felixneumann.hydr8m8.ui.theme.Hydr8M8Theme
 import de.felixneumann.hydr8m8.ui.theme.HydrTheme
+import de.felixneumann.hydr8m8.ui.theme.isDark
 import de.felixneumann.hydr8m8.ui.today.TodayScreen
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
+
+/** Status/navigation bar icons must follow the app design, not only the system setting. */
+fun ComponentActivity.applySystemBars(dark: Boolean) {
+    val style =
+        if (dark) {
+            SystemBarStyle.dark(android.graphics.Color.TRANSPARENT)
+        } else {
+            SystemBarStyle.light(android.graphics.Color.TRANSPARENT, android.graphics.Color.TRANSPARENT)
+        }
+    enableEdgeToEdge(statusBarStyle = style, navigationBarStyle = style)
+}
 
 class MainActivity : ComponentActivity() {
     private val viewModel: MainViewModel by viewModels()
@@ -79,7 +93,10 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         setContent {
-            Hydr8M8Theme {
+            val settings by container.settings.settings.collectAsStateWithLifecycle(initialValue = null)
+            val dark = (settings?.themeMode ?: ThemeMode.SYSTEM).isDark()
+            LaunchedEffect(dark) { applySystemBars(dark) }
+            Hydr8M8Theme(darkTheme = dark) {
                 Box(
                     Modifier
                         .fillMaxSize()
@@ -142,6 +159,7 @@ private fun HydrApp(vm: MainViewModel) {
                 vm.completeOnboarding(goal, { it.copy(schedule = schedule) }, homeIds)
             },
             onLocationGrant = vm::onLocationPermissionGranted,
+            onCreatePreset = vm::createPreset,
         )
         return
     }
@@ -202,6 +220,7 @@ private fun MainScaffold(
 
     Scaffold(
         containerColor = Color.Transparent,
+        contentColor = MaterialTheme.colorScheme.onBackground,
         snackbarHost = { SnackbarHost(snackbar) },
         topBar = {
             if (!isTab) {
@@ -266,7 +285,9 @@ private fun MainScaffold(
             composable(Routes.SURFACE) { entry ->
                 val key = entry.arguments?.getString("key") ?: Surfaces.HOME
                 val selected by remember(key) { vm.surface(key) }.collectAsStateWithLifecycle()
-                SurfaceEditorScreen(key, selected, presets, onChange = { vm.setSurface(key, it) })
+                SurfaceEditorScreen(key, selected, presets, onChange = {
+                    vm.setSurface(key, it)
+                }, onCreatePreset = vm::createPreset)
             }
         }
     }

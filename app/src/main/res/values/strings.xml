@@ -223,4 +223,14 @@
     <string name="bg_light">Light</string>
     <string name="bg_transparent">Transparent</string>
     <string name="widget_opacity">Opacity %1$d %%</string>
+
+    <!-- Appearance & custom amounts -->
+    <string name="create_own_amount">Create custom amount…</string>
+    <string name="section_appearance">Appearance</string>
+    <string name="design">Design</string>
+    <string name="theme_system">Like the system</string>
+    <string name="theme_light">Light</string>
+    <string name="theme_dark">Dark</string>
+    <string name="language">Language</string>
+    <string name="language_system">Like the system</string>
 </resources>
