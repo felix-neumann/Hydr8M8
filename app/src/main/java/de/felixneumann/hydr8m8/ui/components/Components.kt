@@ -52,6 +52,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -235,7 +236,8 @@ fun TimePickerDialog(
     onConfirm: (LocalTime) -> Unit,
     onDismiss: () -> Unit,
 ) {
-    val state = rememberTimePickerState(initial.hour, initial.minute, is24Hour = true)
+    val is24h = android.text.format.DateFormat.is24HourFormat(LocalContext.current)
+    val state = rememberTimePickerState(initial.hour, initial.minute, is24Hour = is24h)
     AlertDialog(
         onDismissRequest = onDismiss,
         confirmButton = {

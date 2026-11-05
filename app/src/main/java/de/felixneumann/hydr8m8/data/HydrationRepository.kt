@@ -238,6 +238,11 @@ class HydrationRepository(
     suspend fun widgetConfig(appWidgetId: Int): WidgetConfig =
         db.widgetConfigs().byId(appWidgetId)?.toDomain() ?: WidgetConfig(appWidgetId)
 
+    fun widgetConfigFlow(appWidgetId: Int): Flow<WidgetConfig> =
+        db.widgetConfigs().observeAll().map { all ->
+            all.firstOrNull { it.appWidgetId == appWidgetId }?.toDomain() ?: WidgetConfig(appWidgetId)
+        }
+
     suspend fun saveWidgetConfig(config: WidgetConfig) {
         db.widgetConfigs().upsert(config.toEntity())
     }

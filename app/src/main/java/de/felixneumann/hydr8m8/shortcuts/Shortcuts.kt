@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.graphics.Bitmap
 import android.graphics.Canvas
-import android.graphics.Paint
 import android.graphics.PorterDuff
 import android.graphics.PorterDuffColorFilter
 import android.os.Bundle
@@ -57,7 +56,10 @@ class ShortcutPublisher(
         ShortcutManagerCompat.setDynamicShortcuts(context, shortcuts)
     }
 
-    /** Colored icon on a dark circle, so the white line icons stay visible in the launcher menu. */
+    /**
+     * Adaptive icon: dark full-bleed background with the colored line icon inside the safe zone,
+     * so the white line icons stay visible and large in the launcher menu.
+     */
     private fun iconBitmap(
         drawableRes: Int,
         color: Int,
@@ -65,25 +67,18 @@ class ShortcutPublisher(
         val size = ICON_PX
         val bitmap = createBitmap(size, size, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
-        canvas.drawCircle(
-            size / 2f,
-            size / 2f,
-            size / 2f,
-            Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                this.color =
-                    BrandColors.CARD
-            },
-        )
+        canvas.drawColor(BrandColors.CARD)
         val icon = context.getDrawable(drawableRes)!!.mutate()
         icon.colorFilter = PorterDuffColorFilter(color, PorterDuff.Mode.SRC_IN)
-        val inset = size / 4
+        val inset = (size * ICON_INSET).toInt()
         icon.setBounds(inset, inset, size - inset, size - inset)
         icon.draw(canvas)
-        return IconCompat.createWithBitmap(bitmap)
+        return IconCompat.createWithAdaptiveBitmap(bitmap)
     }
 
     private companion object {
-        const val ICON_PX = 192
+        const val ICON_PX = 216
+        const val ICON_INSET = 0.3f
     }
 }
 

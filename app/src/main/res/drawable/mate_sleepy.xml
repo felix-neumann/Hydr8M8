@@ -3,6 +3,7 @@
     android:width="108dp" android:height="108dp"
     android:viewportWidth="108" android:viewportHeight="108">
     <path android:fillColor="#FFFFFFFF" android:pathData="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" />
+    <path android:strokeColor="#FF3FA7FF" android:strokeWidth="3" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" />
     <path android:strokeColor="#FF0B2C48" android:strokeWidth="5" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M39 67 h12 M57 67 h12" />
     <path android:fillColor="#FF0B2C48" android:pathData="M50,80 a4,4 0 1,0 8,0 a4,4 0 1,0 -8,0 Z" />
     <path android:strokeColor="#FF9FD2FF" android:strokeWidth="2.5" android:strokeLineCap="round" android:strokeLineJoin="round" android:pathData="M70 24 h8 l-8 10 h8" />

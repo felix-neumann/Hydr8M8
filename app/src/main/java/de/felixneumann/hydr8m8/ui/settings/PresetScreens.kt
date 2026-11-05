@@ -214,7 +214,6 @@ private fun PresetEditDialog(
                     value = volume.toFloat(),
                     onValueChange = { volume = ((it / 10).roundToInt() * 10).coerceIn(10, max) },
                     valueRange = 10f..max.toFloat(),
-                    steps = (max - 10) / 10 - 1,
                 )
                 if (alcohol) {
                     Text(stringResource(R.string.abv_label, Format.abv(abv)))

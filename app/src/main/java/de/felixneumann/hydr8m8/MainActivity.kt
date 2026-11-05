@@ -36,6 +36,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -66,6 +67,7 @@ import de.felixneumann.hydr8m8.ui.stats.StatsScreen
 import de.felixneumann.hydr8m8.ui.theme.Hydr8M8Theme
 import de.felixneumann.hydr8m8.ui.theme.HydrTheme
 import de.felixneumann.hydr8m8.ui.today.TodayScreen
+import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.LocalDate
 import java.time.ZoneId
@@ -165,26 +167,34 @@ private fun MainScaffold(
     var sheet by remember { mutableStateOf<SheetRequest?>(null) }
     val resources = LocalResources.current
 
+    val scope = rememberCoroutineScope()
     LaunchedEffect(Unit) {
         vm.events.collect { event ->
-            when (event) {
-                is UiEvent.Logged -> {
-                    val result =
-                        snackbar.showSnackbar(
-                            message = resources.getString(R.string.logged_snackbar, Format.volume(event.entry.volumeMl)),
-                            actionLabel = resources.getString(R.string.undo),
-                            duration = SnackbarDuration.Short,
-                        )
-                    if (result == SnackbarResult.ActionPerformed) vm.undo()
-                }
+            snackbar.currentSnackbarData?.dismiss()
+            scope.launch {
+                when (event) {
+                    is UiEvent.Logged -> {
+                        val result =
+                            snackbar.showSnackbar(
+                                message =
+                                    resources.getString(
+                                        R.string.logged_snackbar,
+                                        Format.volume(event.entry.volumeMl),
+                                    ),
+                                actionLabel = resources.getString(R.string.undo),
+                                duration = SnackbarDuration.Short,
+                            )
+                        if (result == SnackbarResult.ActionPerformed) vm.undo()
+                    }
 
-                is UiEvent.Undone -> {
-                    snackbar.showSnackbar(
-                        event.entry?.let {
-                            resources.getString(R.string.undo_done, Format.volume(it.volumeMl), Format.time(it.at))
-                        }
-                            ?: resources.getString(R.string.undo_nothing),
-                    )
+                    is UiEvent.Undone -> {
+                        snackbar.showSnackbar(
+                            event.entry?.let {
+                                resources.getString(R.string.undo_done, Format.volume(it.volumeMl), Format.time(it.at))
+                            }
+                                ?: resources.getString(R.string.undo_nothing),
+                        )
+                    }
                 }
             }
         }

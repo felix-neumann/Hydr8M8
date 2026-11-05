@@ -28,8 +28,8 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.PathEffect
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -57,6 +57,7 @@ private data class Bar(
 private const val WEEK_DAYS = 7L
 private const val MONTHS_PER_YEAR = 12L
 private const val ALCOHOL_WEEKS = 8L
+private const val TOTAL_TWO_DECIMALS_BELOW_ML = 100_000L
 
 @Composable
 fun StatsScreen(
@@ -86,7 +87,17 @@ fun StatsScreen(
         Row(horizontalArrangement = Arrangement.spacedBy(10.dp)) {
             StatTile(
                 stringResource(R.string.stat_total),
-                Format.litres(history.totalWaterMl, decimals = 1),
+                Format.litres(
+                    history.totalWaterMl,
+                    decimals =
+                        if (history.totalWaterMl <
+                            TOTAL_TWO_DECIMALS_BELOW_ML
+                        ) {
+                            2
+                        } else {
+                            1
+                        },
+                ),
                 Modifier.weight(1f),
             )
             StatTile(stringResource(R.string.stat_average), Format.litres(history.averagePerDayMl), Modifier.weight(1f))
@@ -99,7 +110,7 @@ fun StatsScreen(
                 sub = stringResource(R.string.stat_best, streak.bestDays),
             )
             StatTile(
-                stringResource(R.string.jokers),
+                stringResource(R.string.stat_jokers),
                 "🛡 ${streak.jokers}",
                 Modifier.weight(1f),
                 sub =

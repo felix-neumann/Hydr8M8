@@ -41,6 +41,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import de.felixneumann.hydr8m8.R
 import de.felixneumann.hydr8m8.domain.AlcoholMath
+import de.felixneumann.hydr8m8.domain.BuiltInPresets
 import de.felixneumann.hydr8m8.domain.DrinkIcon
 import de.felixneumann.hydr8m8.domain.DrinkKind
 import de.felixneumann.hydr8m8.domain.Entry
@@ -75,7 +76,6 @@ private const val ABV_STEP = 0.5
 private const val MIN_ABV = 0.5
 private const val MAX_ABV = 70.0
 private const val DEFAULT_WATER_ML = 250
-private const val DEFAULT_ALCOHOL_ML = 330
 private const val DEFAULT_ABV = 5.0
 
 /**
@@ -96,7 +96,7 @@ fun EntrySheet(
     val zone = ZoneId.systemDefault()
     val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
     var kind by remember { mutableStateOf(editing?.kind ?: DrinkKind.WATER) }
-    var icon by remember { mutableStateOf(editing?.icon ?: DrinkIcon.GLASS) }
+    var icon by remember { mutableStateOf(editing?.icon ?: DrinkIcon.MUG) }
     var volume by remember { mutableIntStateOf(editing?.volumeMl ?: DEFAULT_WATER_ML) }
     var abv by remember { mutableDoubleStateOf(editing?.abvPercent ?: DEFAULT_ABV) }
     var date by remember { mutableStateOf(editing?.at?.atZone(zone)?.toLocalDate() ?: initialDate) }
@@ -112,6 +112,14 @@ fun EntrySheet(
     val colors = HydrTheme.colors
     val maxMl = if (kind == DrinkKind.ALCOHOL) MAX_ALCOHOL_ML else MAX_WATER_ML
 
+    // Picking an icon pre-fills the typical amount (and ABV) of that vessel.
+    fun applyTemplate(option: DrinkIcon) {
+        BuiltInPresets.all.firstOrNull { it.icon == option }?.let { t ->
+            volume = t.volumeMl
+            t.abvPercent?.let { abv = it }
+        }
+    }
+
     ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, modifier = modifier) {
         Column(
             Modifier
@@ -125,8 +133,9 @@ fun EntrySheet(
                         onClick = {
                             if (kind != k) {
                                 kind = k
-                                icon = DrinkIcon.forKind(k).first()
-                                volume = if (k == DrinkKind.ALCOHOL) DEFAULT_ALCOHOL_ML else DEFAULT_WATER_ML
+                                val defaultIcon = if (k == DrinkKind.ALCOHOL) DrinkIcon.BEER else DrinkIcon.GLASS
+                                icon = defaultIcon
+                                applyTemplate(defaultIcon)
                             }
                         },
                         label = {
@@ -149,7 +158,10 @@ fun EntrySheet(
             LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 items(DrinkIcon.forKind(kind)) { option ->
                     Surface(
-                        onClick = { icon = option },
+                        onClick = {
+                            icon = option
+                            applyTemplate(option)
+                        },
                         shape = RoundedCornerShape(12.dp),
                         color = if (icon == option) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
                         border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
@@ -169,7 +181,6 @@ fun EntrySheet(
                 value = volume.toFloat(),
                 onValueChange = { volume = ((it / STEP_ML).roundToInt() * STEP_ML).coerceIn(MIN_ML, maxMl) },
                 valueRange = MIN_ML.toFloat()..maxMl.toFloat(),
-                steps = (maxMl - MIN_ML) / STEP_ML - 1,
             )
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
                 listOf(-STEP_ML * 5, -STEP_ML, STEP_ML, STEP_ML * 5).forEach { delta ->

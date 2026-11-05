@@ -49,7 +49,6 @@ fun SliderDialog(
                     value = value,
                     onValueChange = { value = it },
                     valueRange = range.first.toFloat()..range.last.toFloat(),
-                    steps = ((range.last - range.first) / step - 1).coerceAtLeast(0),
                 )
             }
         },

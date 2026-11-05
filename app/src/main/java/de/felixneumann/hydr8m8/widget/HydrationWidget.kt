@@ -2,6 +2,8 @@ package de.felixneumann.hydr8m8.widget
 
 import android.content.Context
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.DpSize
 import androidx.compose.ui.unit.dp
@@ -53,6 +55,8 @@ import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.ui.BrandColors
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.drawable
+import kotlinx.coroutines.flow.combine
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import java.time.Instant
 import java.time.ZoneId
@@ -115,7 +119,7 @@ private fun paletteFor(config: WidgetConfig): Palette {
 }
 
 class HydrationWidget : GlanceAppWidget() {
-    override val sizeMode = SizeMode.Responsive(setOf(TINY, WIDE_SHORT, WIDE, SQUARE, LARGE))
+    override val sizeMode = SizeMode.Exact
 
     override suspend fun provideGlance(
         context: Context,
@@ -125,32 +129,47 @@ class HydrationWidget : GlanceAppWidget() {
         val c = context.container
         c.repository.ensureSeeded()
         c.repository.ensureWidgetDefaults(appWidgetId)
-        val config = c.repository.widgetConfig(appWidgetId)
-        val presets = c.repository.surfaceNow(Surfaces.widget(appWidgetId))
-        val history = c.repository.historyNow()
-        val settings = c.settings.current()
-        val today = history.todaySummary
-        val zone = ZoneId.systemDefault()
-        val data =
-            WidgetData(
-                config = config,
-                presets = presets,
-                waterMl = today.waterMl,
-                goalMl = today.goalMl,
-                percent = today.percent,
-                mood =
-                    MateMood.of(
-                        Instant.now(),
-                        settings.schedule.windowFor(history.today, zone),
-                        today.waterMl,
-                        today.goalMl,
-                        today.hasAlcohol,
-                    ),
-                streakDays = history.streak.currentDays,
-                jokers = history.streak.jokers,
-                nextReminder = if (settings.reminders.enabled) c.reminderScheduler.nextReminderAt(history) else null,
-            )
-        provideContent { WidgetContent(data) }
+        // Glance keeps a session alive between updates, so the content must observe the data
+        // instead of capturing a snapshot.
+        val dataFlow =
+            combine(
+                c.repository.history,
+                c.settings.settings,
+                c.repository.surface(Surfaces.widget(appWidgetId)),
+                c.repository.widgetConfigFlow(appWidgetId),
+            ) { history, settings, presets, config ->
+                val today = history.todaySummary
+                WidgetData(
+                    config = config,
+                    presets = presets,
+                    waterMl = today.waterMl,
+                    goalMl = today.goalMl,
+                    percent = today.percent,
+                    mood =
+                        MateMood.of(
+                            Instant.now(),
+                            settings.schedule.windowFor(history.today, ZoneId.systemDefault()),
+                            today.waterMl,
+                            today.goalMl,
+                            today.hasAlcohol,
+                        ),
+                    streakDays = history.streak.currentDays,
+                    jokers = history.streak.jokers,
+                    nextReminder =
+                        if (settings.reminders.enabled) {
+                            c.reminderScheduler.nextReminderAt(
+                                history,
+                            )
+                        } else {
+                            null
+                        },
+                )
+            }
+        val initial = dataFlow.first()
+        provideContent {
+            val data by dataFlow.collectAsState(initial)
+            WidgetContent(data)
+        }
     }
 
     companion object {
@@ -291,7 +310,10 @@ private fun Wide(
             ProgressBar(data, palette)
         }
         Spacer(GlanceModifier.width(8.dp))
-        Buttons(data, palette, maxButtons = 3, compact = true)
+        // Buttons get a fixed share so the progress column keeps its space.
+        val mateWidth = if (data.config.showMate) 48.dp else 0.dp
+        val buttonsWidth = (LocalSize.current.width - mateWidth - 24.dp) * WIDE_BUTTONS_SHARE
+        Buttons(data, palette, maxButtons = 3, compact = true, modifier = GlanceModifier.width(buttonsWidth))
     }
 }
 
@@ -391,9 +413,10 @@ private fun Buttons(
     palette: Palette,
     maxButtons: Int,
     compact: Boolean,
+    modifier: GlanceModifier = GlanceModifier.fillMaxWidth(),
 ) {
     val presets = data.presets.take(if (data.config.showUndo) maxButtons - 1 else maxButtons)
-    Row(modifier = GlanceModifier.fillMaxWidth()) {
+    Row(modifier = modifier) {
         presets.forEachIndexed { index, preset ->
             if (index > 0) Spacer(GlanceModifier.width(5.dp))
             Button(
@@ -506,6 +529,7 @@ class HydrationWidgetReceiver : GlanceAppWidgetReceiver() {
 }
 
 private const val RING_PX = 240
+private const val WIDE_BUTTONS_SHARE = 0.55f
 private const val BAR_W_PX = 600
 private const val BAR_H_PX = 24
 private const val GLASS_W_PX = 180

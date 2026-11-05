@@ -78,11 +78,10 @@ object WidgetBitmaps {
                 close()
             }
         val level = heightPx - stroke - (heightPx - 2 * stroke) * fraction.coerceIn(0f, 1f)
-        canvas.withClip(outline) {
+        val bottom = heightPx.toFloat()
         val water =
             Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                shader =
-                    LinearGradient(0f, level, 0f, heightPx.toFloat(), WATER_TOP, WATER_BOTTOM, Shader.TileMode.CLAMP)
+                shader = LinearGradient(0f, level, 0f, bottom, WATER_TOP, WATER_BOTTOM, Shader.TileMode.CLAMP)
             }
         val wave = Path()
         val amp = heightPx * WAVE_RATIO
@@ -93,11 +92,10 @@ object WidgetBitmaps {
             val dir = if (i % 2 == 0) -1 else 1
             wave.quadTo(x + step / 2, level + dir * amp, x + step, level)
         }
-        wave.lineTo(widthPx.toFloat(), heightPx.toFloat())
-        wave.lineTo(0f, heightPx.toFloat())
+        wave.lineTo(widthPx.toFloat(), bottom)
+        wave.lineTo(0f, bottom)
         wave.close()
-            drawPath(wave, water)
-        }
+        canvas.withClip(outline) { drawPath(wave, water) }
         canvas.drawPath(
             outline,
             Paint(Paint.ANTI_ALIAS_FLAG).apply {

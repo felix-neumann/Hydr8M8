@@ -25,6 +25,7 @@
     <string name="alcohol_short">alcohol</string>
     <string name="jokers">jokers</string>
     <string name="joker">Joker</string>
+    <string name="stat_jokers">Jokers</string>
     <plurals name="streak_days">
         <item quantity="one">🔥 %d day</item>
         <item quantity="other">🔥 %d days</item>

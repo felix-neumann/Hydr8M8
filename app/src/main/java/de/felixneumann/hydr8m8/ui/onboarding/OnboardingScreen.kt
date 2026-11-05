@@ -135,7 +135,6 @@ private fun GoalStep(
         value = goal.toFloat(),
         onValueChange = { onGoal(((it / GOAL_STEP).roundToInt() * GOAL_STEP).coerceIn(MIN_GOAL, MAX_GOAL)) },
         valueRange = MIN_GOAL.toFloat()..MAX_GOAL.toFloat(),
-        steps = (MAX_GOAL - MIN_GOAL) / GOAL_STEP - 1,
     )
     Text(
         stringResource(R.string.onboarding_goal_hint),

@@ -172,7 +172,8 @@ def generate_drawables():
         write(os.path.join(DRAWABLE, f"ic_{name}.xml"), vector(24, 24, items))
 
     for mood, face in MATE_FACES.items():
-        items = [fill(MATE_BODY, WHITE)] + face
+        # Blue outline keeps the white mate visible on light backgrounds.
+        items = [fill(MATE_BODY, WHITE), stroke(MATE_BODY, "#FF3FA7FF", 3)] + face
         write(os.path.join(DRAWABLE, f"mate_{mood}.xml"), vector(108, 108, items))
 
     # Launcher foreground: happy mate scaled into the adaptive-icon safe zone.
