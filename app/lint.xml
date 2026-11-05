@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<lint>
+    <!-- We do not track shortcut usage (no ranking analytics needed). -->
+    <issue id="ReportShortcutUsage" severity="ignore" />
+</lint>

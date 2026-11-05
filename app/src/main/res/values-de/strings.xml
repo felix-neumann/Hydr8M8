@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Navigation -->
+    <string name="nav_today">Heute</string>
+    <string name="nav_calendar">Kalender</string>
+    <string name="nav_stats">Statistik</string>
+    <string name="nav_settings">Einstellungen</string>
+    <string name="today">Heute</string>
+    <string name="back">Zurück</string>
+    <string name="next">Weiter</string>
+    <string name="ok">OK</string>
+    <string name="cancel">Abbrechen</string>
+    <string name="save">Speichern</string>
+    <string name="delete">Löschen</string>
+    <string name="undo">Rückgängig</string>
+    <string name="show">Einblenden</string>
+    <string name="hide">Ausblenden</string>
+    <string name="remove">Entfernen</string>
+    <string name="reorder">Zum Sortieren ziehen</string>
+
+    <!-- Today -->
+    <string name="goal_label">Ziel %1$s</string>
+    <string name="alcohol_short">Alkohol</string>
+    <string name="jokers">Joker</string>
+    <string name="joker">Joker</string>
+    <plurals name="streak_days">
+        <item quantity="one">🔥 %d Tag</item>
+        <item quantity="other">🔥 %d Tage</item>
+    </plurals>
+    <string name="configure_home_presets">Mengen für diesen Bildschirm auswählen</string>
+    <string name="add_custom">Eigene Menge eintragen</string>
+    <string name="logged_snackbar">%1$s eingetragen</string>
+    <string name="logged_toast">+%1$s · %2$s / %3$s</string>
+    <string name="undo_done">%1$s von %2$s entfernt</string>
+    <string name="undo_nothing">Nichts zum Rückgängigmachen</string>
+    <string name="preset_missing">Diese Menge gibt es nicht mehr</string>
+
+    <!-- Entry sheet -->
+    <string name="kind_water">Wasser</string>
+    <string name="kind_alcohol">Alkohol</string>
+    <string name="abv_label">Alkohol %1$s</string>
+    <string name="goal_bonus">Ziel +%1$s</string>
+    <string name="save_as_favorite">Als Favorit speichern</string>
+    <string name="add_volume">%1$s eintragen</string>
+    <string name="delete_entry">Eintrag löschen</string>
+
+    <!-- Icons -->
+    <string name="icon_glass_small">Kleines Glas</string>
+    <string name="icon_glass">Glas</string>
+    <string name="icon_mug">Tasse / Becher</string>
+    <string name="icon_glass_large">Großes Glas</string>
+    <string name="icon_bottle_small">Kleine Flasche</string>
+    <string name="icon_bottle">Flasche</string>
+    <string name="icon_sports_bottle">Sportflasche</string>
+    <string name="icon_carafe">Karaffe</string>
+    <string name="icon_bottle_large">Große Flasche</string>
+    <string name="icon_sparkling">Sekt</string>
+    <string name="icon_wine">Wein</string>
+    <string name="icon_beer">Bier</string>
+    <string name="icon_wheat_beer">Weizen</string>
+    <string name="icon_long_drink">Longdrink</string>
+    <string name="icon_shot">Schnaps</string>
+
+    <!-- Mate moods -->
+    <string name="mood_champion">Champion!</string>
+    <string name="mood_happy">Fröhlich</string>
+    <string name="mood_thirsty">Durstig</string>
+    <string name="mood_very_thirsty">Sehr durstig</string>
+    <string name="mood_tipsy">Beschwipst</string>
+    <string name="mood_sleepy">Schläfrig</string>
+
+    <!-- Calendar -->
+    <string name="previous_month">Vorheriger Monat</string>
+    <string name="next_month">Nächster Monat</string>
+    <plurals name="calendar_summary">
+        <item quantity="one">%1$d von %2$d Tag bei 100 %%</item>
+        <item quantity="other">%1$d von %2$d Tagen bei 100 %%</item>
+    </plurals>
+    <string name="saved_by_joker">Durch einen Joker gerettet</string>
+    <string name="no_entries">Keine Einträge an diesem Tag.</string>
+    <string name="add_entry_for_day">Eintrag für diesen Tag hinzufügen</string>
+
+    <!-- Stats -->
+    <string name="stat_total">Seit Beginn</string>
+    <string name="stat_average">Durchschnitt pro Tag</string>
+    <string name="stat_streak">Aktuelle Streak</string>
+    <string name="stat_best">Rekord: %1$d</string>
+    <plurals name="tracked_days">
+        <item quantity="one">%d Tag erfasst</item>
+        <item quantity="other">%d Tage erfasst</item>
+    </plurals>
+    <string name="range_week">Woche</string>
+    <string name="range_month">Monat</string>
+    <string name="range_year">Jahr</string>
+    <string name="chart_average">Durchschnitt an erfassten Tagen: %1$s</string>
+    <string name="alcohol_per_week">Alkohol pro Woche</string>
+    <string name="alcohol_hint">Gramm reiner Alkohol. Jedes Gramm erhöht das Tagesziel um 10 ml.</string>
+
+    <!-- Settings -->
+    <string name="section_goal">Ziel</string>
+    <string name="daily_goal">Tagesziel</string>
+    <string name="daily_goal_hint">Gilt ab heute – vergangene Tage behalten ihr Ziel.</string>
+    <string name="day_start">Tag beginnt um</string>
+    <string name="day_start_hint">Getränke vor dieser Uhrzeit zählen zum Vortag.</string>
+    <string name="section_amounts">Mengen</string>
+    <string name="preset_library">Mengen-Bibliothek</string>
+    <string name="preset_library_hint">Alle Mengen, die du für Startbildschirm, Shortcuts, Erinnerungen und Widgets auswählen kannst. Eingebaute Mengen kannst du ändern oder ausblenden.</string>
+    <string name="new_preset">Neue Menge</string>
+    <string name="edit_preset">Menge bearbeiten</string>
+    <string name="surface_home">Mengen auf dem Startbildschirm</string>
+    <string name="surface_shortcuts">App-Icon-Shortcuts</string>
+    <string name="surface_notification">Buttons in Erinnerungen</string>
+    <string name="surface_widget">Widget-Buttons</string>
+    <string name="surface_home_hint">Erscheinen auf dem Heute-Bildschirm (bis zu %1$d). Ein Tipp trägt sofort ein.</string>
+    <string name="surface_shortcuts_hint">App-Icon gedrückt halten, um ohne Öffnen der App einzutragen (bis zu %1$d, plus Rückgängig).</string>
+    <string name="surface_notification_hint">Buttons in Trink-Erinnerungen (bis zu %1$d, plus Später).</string>
+    <string name="surface_widget_hint">Buttons auf diesem Widget (bis zu %1$d).</string>
+    <string name="add_amount">Menge hinzufügen</string>
+    <string name="max_reached">Maximum von %1$d erreicht</string>
+    <string name="choose_amount">Menge wählen</string>
+    <string name="section_sleep">Wach- und Schlafzeiten</string>
+    <string name="weekdays">Montag – Freitag</string>
+    <string name="weekend">Samstag &amp; Sonntag</string>
+    <string name="wake_up">Aufstehen</string>
+    <string name="bedtime">Schlafenszeit</string>
+    <string name="section_reminders">Erinnerungen</string>
+    <string name="reminders_enabled">Trink-Erinnerungen</string>
+    <string name="reminder_interval">Erinnern nach</string>
+    <string name="reminder_interval_hint" tools:ignore="Typos">Zeit seit dem letzten Getränk (oder der letzten Erinnerung).</string>
+    <string name="halve_when_behind">Früher erinnern, wenn im Rückstand</string>
+    <string name="behind_threshold">Rückstand von mehr als</string>
+    <string name="quiet_after_wake">Ruhe nach dem Aufstehen</string>
+    <string name="snooze_duration">Später erinnern nach</string>
+    <string name="respect_dnd">Still bei „Bitte nicht stören“</string>
+    <string name="respect_dnd_hint">Keine Erinnerungen, solange „Bitte nicht stören“ oder der Schlafenszeitmodus aktiv ist.</string>
+    <string name="minutes_value">%1$d Min.</string>
+    <string name="minutes_short">Min.</string>
+    <string name="section_weather">Wetter</string>
+    <string name="weather_enabled">Ziel an warmen Tagen erhöhen</string>
+    <string name="weather_hint">Nutzt einmal täglich deinen ungefähren Standort (Open-Meteo).</string>
+    <string name="warm_from">Warm ab</string>
+    <string name="warm_bonus">Extra an warmen Tagen</string>
+    <string name="hot_from">Heiß ab</string>
+    <string name="hot_bonus">Extra an heißen Tagen</string>
+    <string name="section_extras">Extras</string>
+    <string name="live_update">Fortschritt auf dem Sperrbildschirm</string>
+    <string name="live_update_hint">Live-Fortschritt (Now Bar), solange du wach bist.</string>
+    <string name="sounds">Soundeffekte</string>
+    <string name="sounds_hint">Dezente Sounds beim Eintragen, beim Erreichen des Ziels und für Streaks. Stumm im Lautlos-/Vibrationsmodus.</string>
+    <string name="section_permissions">Berechtigungen</string>
+    <string name="perm_notifications">Benachrichtigungen</string>
+    <string name="perm_notifications_hint">Für Erinnerungen, Meilensteine und die Fortschrittsanzeige.</string>
+    <string name="perm_location">Ungefährer Standort</string>
+    <string name="perm_location_hint">Nur für den täglichen Wetter-Bonus.</string>
+    <string name="perm_battery">Uneingeschränkte Akkunutzung</string>
+    <string name="perm_battery_hint">Verhindert, dass Samsung Erinnerungen verzögert.</string>
+    <string name="granted">Erteilt</string>
+    <string name="grant">Erteilen</string>
+    <string name="about_version">Hydr8M8 %1$s</string>
+
+    <!-- Onboarding -->
+    <string name="onboarding_welcome">Hi, ich bin dein Drop Mate!</string>
+    <string name="onboarding_goal_text">Wie viel Wasser möchtest du pro Tag trinken?</string>
+    <string name="onboarding_goal_hint">Orientierung: Die EU-Lebensmittelbehörde EFSA empfiehlt etwa 1,6 l (Frauen) bis 2,0 l (Männer) aus Getränken pro Tag. Du kannst das jederzeit ändern.</string>
+    <string name="onboarding_sleep_title">Wann bist du wach?</string>
+    <string name="onboarding_sleep_text">Erinnerungen kommen nur, während du wach bist.</string>
+    <string name="onboarding_home_title">Deine Mengen</string>
+    <string name="onboarding_home_text">Wähle die Mengen, die du am häufigsten trinkst. Ein Tipp trägt sie ein.</string>
+    <string name="onboarding_perm_title">Fast geschafft</string>
+    <string name="onboarding_perm_text">Ein paar Berechtigungen, damit Erinnerungen und der Wetter-Bonus funktionieren.</string>
+    <string name="lets_go">Los geht\'s!</string>
+
+    <!-- Notifications -->
+    <string name="channel_reminders">Trink-Erinnerungen</string>
+    <string name="channel_reminders_desc">Erinnert dich ans Trinken, wenn länger nichts eingetragen wurde.</string>
+    <string name="channel_milestones">Meilensteine</string>
+    <string name="channel_milestones_desc">Feiert Streak-Meilensteine.</string>
+    <string name="channel_progress">Tagesfortschritt</string>
+    <string name="channel_progress_desc">Dauerhafte Fortschrittsanzeige, solange du wach bist.</string>
+    <string-array name="reminder_titles">
+        <item>💧 Mate wird durstig</item>
+        <item>💧 Zeit für einen Schluck?</item>
+        <item>💧 Dein Wasser wartet</item>
+        <item>💧 Kurz nachfüllen?</item>
+    </string-array>
+    <string name="reminder_text">Letztes Getränk vor %1$s · noch %2$s</string>
+    <string name="reminder_text_nothing_yet">Heute noch nichts eingetragen · noch %1$s</string>
+    <string name="duration_hours_minutes">%1$d Std. %2$d Min.</string>
+    <string name="duration_minutes">%1$d Min.</string>
+    <string name="action_snooze">Später</string>
+    <string name="progress_goal_reached_title">🎉 Ziel erreicht!</string>
+    <string name="progress_goal_reached_text">%1$s heute. Mate ist stolz auf dich.</string>
+    <string name="milestone_week_title">🔥 7 Tage am Stück!</string>
+    <string name="milestone_week_text">Eine ganze Woche bei 100 %. Deine Nieren schicken eine Dankeskarte.</string>
+    <plurals name="milestone_month_title">
+        <item quantity="one">🏆 Ein Monat voller Wasser!</item>
+        <item quantity="other">🏆 %d Monate voller Wasser!</item>
+    </plurals>
+    <string name="milestone_month_text">%1$s seit Beginn dieser Streak – etwa %2$d volle Eimer. Mate ist stolz!</string>
+    <string name="milestone_half_year_title">🌊 Ein halbes Jahr!</string>
+    <string name="milestone_half_year_text">Sechs Monate Ziel erreicht: %1$s, rund %2$s Badewannen. Legendär.</string>
+    <plurals name="milestone_year_title">
+        <item quantity="one">👑 Ein ganzes Jahr am Stück!</item>
+        <item quantity="other">👑 %d Jahre am Stück!</item>
+    </plurals>
+    <string name="milestone_year_text">Ein ganzes Jahr bei 100 %%. %1$s pure Hydration. Mate ist sprachlos.</string>
+
+    <!-- Shortcuts & widget -->
+    <string name="shortcut_undo">Letzten Eintrag rückgängig</string>
+    <string name="widget_description">Tagesfortschritt mit Schnell-Buttons</string>
+    <string name="widget_settings">Widget-Einstellungen</string>
+    <string name="widget_buttons">Buttons</string>
+    <string name="widget_show_mate">Drop Mate anzeigen</string>
+    <string name="widget_show_info">Streak und nächste Erinnerung anzeigen</string>
+    <string name="widget_show_undo">Rückgängig-Button</string>
+    <string name="widget_tap_action">Tipp-Aktion (1×1)</string>
+    <string name="widget_tap_action_hint">Was das kleinste Widget beim Antippen einträgt.</string>
+    <string name="widget_background">Hintergrund</string>
+    <string name="bg_dark">Dunkel</string>
+    <string name="bg_light">Hell</string>
+    <string name="bg_transparent">Transparent</string>
+    <string name="widget_opacity">Deckkraft %1$d %%</string>
+</resources>

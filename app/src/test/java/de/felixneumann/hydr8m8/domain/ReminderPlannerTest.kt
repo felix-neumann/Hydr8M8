@@ -88,7 +88,9 @@ class ReminderPlannerTest {
 
     @Test
     fun `snooze wins`() {
-        assertThat(next(now = at("09:00"), lastReminderAt = at("09:00"), snoozedUntil = at("09:30"))).isEqualTo(at("09:30"))
+        assertThat(
+            next(now = at("09:00"), lastReminderAt = at("09:00"), snoozedUntil = at("09:30")),
+        ).isEqualTo(at("09:30"))
     }
 
     @Test

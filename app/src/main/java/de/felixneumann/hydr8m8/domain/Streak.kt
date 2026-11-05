@@ -50,11 +50,15 @@ object StreakCalculator {
         var day: LocalDate = firstDate
         while (day.isBefore(today)) {
             when {
-                isSuccess(day) -> countSuccess(day)
+                isSuccess(day) -> {
+                    countSuccess(day)
+                }
+
                 count > 0 && jokers > 0 -> {
                     jokers--
                     jokerDays += day
                 }
+
                 else -> {
                     count = 0
                     start = null

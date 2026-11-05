@@ -12,7 +12,7 @@ max_line_length = 120
 ktlint_code_style = ktlint_official
 ktlint_function_naming_ignore_when_annotated_with = Composable
 # Compose rules: allow app-level CompositionLocals and preview naming conventions.
-compose_allowed_composition_locals = LocalAppContainer
+compose_allowed_composition_locals = LocalHydrColors
 ktlint_standard_function-expression-body = disabled
 ktlint_standard_class-signature = disabled
 ktlint_standard_function-signature = disabled
