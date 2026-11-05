@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hydr8M8 – Mockups v2</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --bg0:#071a2c; --bg1:#0b2c48; --card:#10385a; --line:#2f5b82; --txt:#e6f3ff; --mut:#8fb5d6; --acc:#3fa7ff; --accd:#04223d; }
+  * { box-sizing:border-box; }
+  body { margin:0; font-family:"Segoe UI", Roboto, system-ui, sans-serif; background:#e9eef3; color:#1b1f24; }
+  header { padding:32px 40px 0; }
+  h1 { margin:0 0 4px; font-size:28px; }
+  h2 { margin:44px 40px 4px; font-size:22px; }
+  p.lead { margin:0 40px 12px; color:#5d6670; max-width:960px; }
+  .row { display:flex; flex-wrap:wrap; gap:36px; padding:16px 40px 8px; align-items:flex-start; }
+  .variant { display:flex; flex-direction:column; gap:10px; }
+  .tag { font-weight:700; font-size:15px; }
+  .tag small { display:block; font-weight:400; color:#5d6670; max-width:300px; margin-top:2px; }
+  svg.i { width:20px; height:20px; fill:none; stroke:currentColor; stroke-width:1.6; stroke-linecap:round; stroke-linejoin:round; vertical-align:middle; }
+
+  .phone { width:300px; height:640px; border-radius:38px; border:9px solid #111; position:relative; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,.18);
+           background:linear-gradient(180deg,var(--bg0),var(--bg1)); color:var(--txt); }
+  .status { height:26px; display:flex; justify-content:space-between; align-items:center; padding:0 22px; font-size:11px; font-weight:600; color:#cfe4f7; }
+  .punch { position:absolute; top:7px; left:50%; width:12px; height:12px; margin-left:-6px; background:#000; border-radius:50%; z-index:3; }
+  .screen { padding:6px 18px; }
+  .navbar { position:absolute; bottom:0; left:0; right:0; height:58px; display:flex; justify-content:space-around; align-items:center; font-size:10px; background:rgba(255,255,255,.04); color:var(--mut); }
+  .navbar div { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .navbar i { display:block; width:22px; height:22px; border-radius:7px; background:#1d4466; }
+  .navbar .on { color:var(--acc); } .navbar .on i { background:var(--acc); }
+
+  .hdr { display:flex; justify-content:space-between; align-items:center; margin-top:4px; }
+  .hdr .d { font-size:12px; color:var(--mut); }
+  .hdr .t { font-size:20px; font-weight:700; }
+  .pills { display:flex; flex-wrap:wrap; gap:6px; margin-top:10px; }
+  .pill { background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:14px; padding:5px 9px; font-size:11px; color:#cfe4f7; display:flex; gap:5px; align-items:center; }
+  .favs { display:grid; grid-template-columns:repeat(4,1fr); gap:8px; margin-top:12px; }
+  .fav { border:1px solid var(--line); border-radius:16px; padding:8px 2px 6px; text-align:center; font-size:11px; color:#cfe4f7; }
+  .fav svg.i { width:24px; height:24px; display:block; margin:0 auto 3px; color:var(--acc); }
+  .fav.alc svg.i { color:#f2b6ff; }
+  .fav.more { border-style:dashed; }
+  .fab { position:absolute; right:18px; bottom:72px; width:54px; height:54px; border-radius:18px; background:var(--acc); color:var(--accd); font-size:28px; font-weight:700; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 14px rgba(63,167,255,.45); }
+
+  .center { display:flex; flex-direction:column; align-items:center; margin-top:6px; }
+  .big { font-size:30px; font-weight:700; }
+  .big span { font-size:14px; color:var(--mut); font-weight:400; }
+  .goalline { font-size:11px; color:var(--mut); margin-top:2px; text-align:center; }
+
+  /* calendar */
+  .cal { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:10px; }
+  .cal .h { font-size:10px; text-align:center; color:var(--mut); }
+  .cal .d { aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; position:relative; }
+  .cal .d sup { position:absolute; top:-4px; right:-3px; font-size:9px; }
+  .legend { display:grid; grid-template-columns:repeat(4,auto); gap:6px 10px; margin-top:12px; font-size:10px; color:var(--mut); }
+  .legend i { width:11px; height:11px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
+  .daycard { margin-top:12px; background:rgba(255,255,255,.06); border:1px solid var(--line); border-radius:16px; padding:10px 12px; font-size:12px; }
+  .entry { display:flex; justify-content:space-between; align-items:center; padding:4px 0; color:#cfe4f7; }
+
+  /* icon catalogue */
+  .icons { display:grid; grid-template-columns:repeat(auto-fill,minmax(120px,1fr)); gap:12px; padding:12px 40px; max-width:1100px; }
+  .ic { background:linear-gradient(180deg,var(--bg0),var(--bg1)); color:var(--txt); border-radius:16px; padding:12px; text-align:center; font-size:12px; }
+  .ic svg.i { width:36px; height:36px; color:var(--acc); display:block; margin:0 auto 6px; stroke-width:1.4; }
+  .ic.alc svg.i { color:#f2b6ff; }
+  .ic b { display:block; font-size:13px; }
+  .ic small { color:var(--mut); }
+
+  /* widgets */
+  .homebg { width:560px; border-radius:30px; padding:24px; background:linear-gradient(135deg,#f2a65a,#725ac1 70%,#3a2f7a); display:grid; grid-template-columns:repeat(4,1fr); grid-auto-rows:116px; gap:16px; }
+  .w { border-radius:26px; background:rgba(7,26,44,.92); color:var(--txt); padding:12px 14px; position:relative; overflow:hidden; box-shadow:0 4px 14px rgba(0,0,0,.25); }
+  .w .lab { position:absolute; bottom:-22px; left:0; font-size:10px; color:#fff; }
+  .wbar { height:12px; border-radius:7px; background:#1d4466; overflow:hidden; }
+  .wbar div { height:100%; background:linear-gradient(90deg,#1572c9,#5cc3ff); }
+  .wbtn { flex:1; border-radius:14px; background:#173f63; display:flex; align-items:center; justify-content:center; gap:4px; font-size:11px; padding:6px 0; color:#cfe4f7; }
+  .wbtn svg.i { width:18px; height:18px; color:var(--acc); }
+  .wlabel { font-size:11px; color:#fff; text-align:center; margin-top:4px; }
+  .cfg { width:300px; }
+
+  /* mate moods */
+  .moods { display:flex; gap:18px; flex-wrap:wrap; padding:12px 40px; }
+  .mood { background:linear-gradient(180deg,var(--bg0),var(--bg1)); border-radius:18px; padding:14px; width:150px; text-align:center; color:var(--txt); font-size:12px; }
+  .mood b { display:block; margin-top:6px; font-size:13px; }
+  .mood small { color:var(--mut); }
+</style>
+</head>
+<body>
+
+<!-- ============ shared icon + mate symbols ============ -->
+<svg width="0" height="0" style="position:absolute">
+  <defs>
+    <!-- water vessels (24x24, line style, stroke = currentColor) -->
+    <symbol id="i-glass-s" viewBox="0 0 24 24"><path d="M6.5 9h11l-1.2 11h-8.6z"/><path d="M7.3 13.5h9.4"/></symbol>
+    <symbol id="i-glass" viewBox="0 0 24 24"><path d="M6 3h12l-1.6 18H7.6z"/><path d="M6.8 11h10.4"/></symbol>
+    <symbol id="i-glass-l" viewBox="0 0 24 24"><path d="M5 2.5h14l-1.8 19H6.8z"/><path d="M5.7 9.5h12.6"/><path d="M9 14v4"/></symbol>
+    <symbol id="i-mug" viewBox="0 0 24 24"><path d="M4 6h12v11a3 3 0 0 1-3 3H7a3 3 0 0 1-3-3z"/><path d="M16 9h2a2.5 2.5 0 0 1 0 5h-2"/><path d="M4 10h12"/></symbol>
+    <symbol id="i-bottle-s" viewBox="0 0 24 24"><path d="M10 2.5h4v3l1.8 2.5V20a1.5 1.5 0 0 1-1.5 1.5H9.7A1.5 1.5 0 0 1 8.2 20V8L10 5.5z"/><path d="M8.2 12h7.6"/></symbol>
+    <symbol id="i-bottle" viewBox="0 0 24 24"><path d="M10 2h4v3l2.5 3.5V20a2 2 0 0 1-2 2h-5a2 2 0 0 1-2-2V8.5L10 5z"/><path d="M7.5 11h9"/><path d="M7.5 16h9"/></symbol>
+    <symbol id="i-bottle-l" viewBox="0 0 24 24"><path d="M10.2 1.5h3.6v2.5L17 7.5v13a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2v-13L10.2 4z"/><path d="M7 10h10"/><path d="M7 13.5h10"/><path d="M7 17h10"/></symbol>
+    <symbol id="i-carafe" viewBox="0 0 24 24"><path d="M9 2.5h6l-.8 4L18 12v7.5a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2V12l3.8-5.5z"/><path d="M6 14h12"/></symbol>
+    <symbol id="i-sport" viewBox="0 0 24 24"><path d="M10 1.5h4v2.5h-4z"/><path d="M8.5 4h7a1.5 1.5 0 0 1 1.5 1.5V20a2 2 0 0 1-2 2H9a2 2 0 0 1-2-2V5.5A1.5 1.5 0 0 1 8.5 4z"/><path d="M7 9h10"/><path d="M7 17h10"/></symbol>
+    <!-- alcohol -->
+    <symbol id="i-sekt" viewBox="0 0 24 24"><path d="M9.5 2h5l-.6 9a1.9 1.9 0 0 1-3.8 0z"/><path d="M12 13v8"/><path d="M9 21.5h6"/><path d="M9.8 6h4.4"/></symbol>
+    <symbol id="i-wine" viewBox="0 0 24 24"><path d="M7 2.5h10l-.4 4.5a4.6 4.6 0 0 1-9.2 0z"/><path d="M12 11.6V21"/><path d="M8.5 21.5h7"/><path d="M7.3 6h9.4"/></symbol>
+    <symbol id="i-beer" viewBox="0 0 24 24"><path d="M5 7h10v12.5a1.5 1.5 0 0 1-1.5 1.5h-7A1.5 1.5 0 0 1 5 19.5z"/><path d="M15 9.5h2.5a2 2 0 0 1 2 2v3a2 2 0 0 1-2 2H15"/><path d="M5 7a2.2 2.2 0 0 1 2.5-3.5 2.6 2.6 0 0 1 4.6 0A2.2 2.2 0 0 1 15 7"/><path d="M8.5 11v6.5"/><path d="M11.5 11v6.5"/></symbol>
+    <symbol id="i-weizen" viewBox="0 0 24 24"><path d="M8 2.5h8l-1 6.5 1.3 7.5-1 5H8.7l-1-5L9 9z"/><path d="M8.6 6.5h6.8"/></symbol>
+    <symbol id="i-shot" viewBox="0 0 24 24"><path d="M7 8h10l-1.5 12h-7z"/><path d="M7.5 12h9"/></symbol>
+    <symbol id="i-cocktail" viewBox="0 0 24 24"><path d="M4 4h16l-8 8z"/><path d="M12 12v9"/><path d="M8.5 21.5h7"/><path d="M7 7h10"/><circle cx="17.5" cy="3" r="1.5"/></symbol>
+    <symbol id="i-undo" viewBox="0 0 24 24"><path d="M9 14 4 9l5-5"/><path d="M4 9h10.5a5.5 5.5 0 0 1 0 11H11"/></symbol>
+    <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+    <symbol id="i-bell" viewBox="0 0 24 24"><path d="M6 16V11a6 6 0 0 1 12 0v5l1.5 2h-15z"/><path d="M10 20.5a2 2 0 0 0 4 0"/></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2.5M12 19.5V22M2 12h2.5M19.5 12H22M4.9 4.9l1.8 1.8M17.3 17.3l1.8 1.8M4.9 19.1l1.8-1.8M17.3 6.7l1.8-1.8"/></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 2.5 19.5 5v6.5c0 4.6-3.2 8.3-7.5 10-4.3-1.7-7.5-5.4-7.5-10V5z"/></symbol>
+
+    <!-- Drop Mate base (108x108). Faces are added separately per mood. -->
+    <symbol id="mate-body" viewBox="0 0 108 108"><path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" fill="#fff"/></symbol>
+  </defs>
+</svg>
+
+<header>
+  <h1>Hydr8M8 – Mockups v2</h1>
+  <p style="margin:0;color:#5d6670">Direction B (dark, liquid) with the information density of A. Logo 2 "Drop Mate". All amounts shown are user-configurable favorites.</p>
+</header>
+
+<!-- ======================= HOME ======================= -->
+<h2>Home screen – two proposals</h2>
+<p class="lead">Tap a favorite logs it instantly (snackbar with Undo). "+" opens a custom-amount sheet (number pad, slider, icon, time for back-dating). The goal line explains today's goal: base + alcohol + weather.</p>
+<div class="row">
+
+  <!-- H1 -->
+  <div class="variant">
+    <div class="tag">H1 · Glass + info<small>Glass fill = progress. Mate sits on the rim and reacts. Info pills: next reminder, streak, jokers.</small></div>
+    <div class="phone">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="hdr"><div><div class="d">Wed, 5 Nov</div><div class="t">Today</div></div></div>
+        <div class="center">
+          <svg width="150" height="200" viewBox="0 0 150 200">
+            <defs>
+              <clipPath id="gl1"><path d="M18 30 H132 L118 196 H32 Z"/></clipPath>
+              <linearGradient id="wt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc3ff"/><stop offset="1" stop-color="#1572c9"/></linearGradient>
+            </defs>
+            <g clip-path="url(#gl1)">
+              <path d="M0 80 Q 20 70 40 80 T 80 80 T 120 80 T 160 80 V 210 H0 Z" fill="url(#wt)"/>
+              <path d="M0 86 Q 25 96 50 86 T 100 86 T 150 86 V 210 H0 Z" fill="#1d8be0" opacity=".55"/>
+            </g>
+            <path d="M18 30 H132 L118 196 H32 Z" fill="none" stroke="#9fd2ff" stroke-width="3" stroke-linejoin="round"/>
+            <text x="75" y="150" text-anchor="middle" font-size="26" font-weight="700" fill="#fff">69 %</text>
+            <!-- mate on the rim -->
+            <g transform="translate(96 0) scale(.36)"><use href="#mate-body"/><circle cx="44" cy="66" r="5" fill="#0b2c48"/><circle cx="64" cy="66" r="5" fill="#0b2c48"/><path d="M43 78 Q54 88 65 78" stroke="#0b2c48" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+          </svg>
+          <div class="big">1.80 L <span>/ 2.60 L</span></div>
+          <div class="goalline">Goal 2.20 L <span style="color:#f2b6ff">+0.20 beer</span> <span style="color:#ffd27a">+0.20 ☀ 29°</span></div>
+        </div>
+        <div class="pills">
+          <div class="pill"><svg class="i"><use href="#i-bell"/></svg>11:30</div>
+          <div class="pill">🔥 12 days</div>
+          <div class="pill"><svg class="i"><use href="#i-shield"/></svg>×1 joker</div>
+        </div>
+        <div class="favs">
+          <div class="fav"><svg class="i"><use href="#i-glass"/></svg>200 ml</div>
+          <div class="fav"><svg class="i"><use href="#i-mug"/></svg>250 ml</div>
+          <div class="fav"><svg class="i"><use href="#i-bottle"/></svg>500 ml</div>
+          <div class="fav alc"><svg class="i"><use href="#i-beer"/></svg>0.5 L 5%</div>
+        </div>
+      </div>
+      <div class="fab">+</div>
+      <div class="navbar"><div class="on"><i></i>Today</div><div><i></i>Calendar</div><div><i></i>Stats</div><div><i></i>Settings</div></div>
+    </div>
+  </div>
+
+  <!-- H2 -->
+  <div class="variant">
+    <div class="tag">H2 · Mate is the glass<small>The Drop Mate itself fills up. Mood face changes with progress. More playful, less "data".</small></div>
+    <div class="phone">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="hdr"><div><div class="d">Wed, 5 Nov</div><div class="t">Today</div></div><div class="pill">🔥 12 · <svg class="i"><use href="#i-shield"/></svg>1</div></div>
+        <div class="center">
+          <svg width="190" height="200" viewBox="0 0 108 108">
+            <defs><clipPath id="mclip"><path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z"/></clipPath></defs>
+            <path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" fill="#12395c"/>
+            <g clip-path="url(#mclip)">
+              <path d="M0 52 Q 13 47 27 52 T 54 52 T 81 52 T 108 52 V 110 H0 Z" fill="url(#wt)"/>
+            </g>
+            <path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" fill="none" stroke="#9fd2ff" stroke-width="2"/>
+            <circle cx="45" cy="66" r="4" fill="#04223d"/><circle cx="63" cy="66" r="4" fill="#04223d"/>
+            <path d="M45 77 Q54 84 63 77" stroke="#04223d" stroke-width="3.5" fill="none" stroke-linecap="round"/>
+          </svg>
+          <div class="big">1.80 L <span>/ 2.60 L · 69 %</span></div>
+          <div class="goalline">Goal 2.20 L <span style="color:#f2b6ff">+0.20 beer</span> <span style="color:#ffd27a">+0.20 ☀</span> · next reminder 11:30</div>
+        </div>
+        <div class="favs" style="margin-top:16px">
+          <div class="fav"><svg class="i"><use href="#i-glass"/></svg>200 ml</div>
+          <div class="fav"><svg class="i"><use href="#i-mug"/></svg>250 ml</div>
+          <div class="fav"><svg class="i"><use href="#i-bottle"/></svg>500 ml</div>
+          <div class="fav more"><svg class="i"><use href="#i-plus"/></svg>More</div>
+        </div>
+      </div>
+      <div class="navbar"><div class="on"><i></i>Today</div><div><i></i>Calendar</div><div><i></i>Stats</div><div><i></i>Settings</div></div>
+    </div>
+  </div>
+
+  <!-- Custom amount sheet -->
+  <div class="variant">
+    <div class="tag">"+" sheet (custom / back-dated)<small>Pick icon + amount, optionally change time or date. "Save as favorite" adds it to the favorites list.</small></div>
+    <div class="phone">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div style="position:absolute;inset:0;background:rgba(0,0,0,.45)"></div>
+      <div style="position:absolute;left:0;right:0;bottom:0;height:470px;background:#0f2f4c;border-radius:28px 28px 0 0;padding:14px 18px">
+        <div style="width:40px;height:4px;background:#2f5b82;border-radius:2px;margin:0 auto 12px"></div>
+        <div style="display:flex;gap:8px;margin-bottom:12px">
+          <div class="pill" style="background:var(--acc);color:var(--accd);border-color:var(--acc)">💧 Water</div>
+          <div class="pill">🍷 Alcohol</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(5,1fr);gap:8px;color:var(--acc)">
+          <div style="text-align:center"><svg class="i" style="width:28px;height:28px"><use href="#i-glass-s"/></svg></div>
+          <div style="text-align:center;background:#173f63;border-radius:12px"><svg class="i" style="width:28px;height:28px"><use href="#i-glass"/></svg></div>
+          <div style="text-align:center"><svg class="i" style="width:28px;height:28px"><use href="#i-mug"/></svg></div>
+          <div style="text-align:center"><svg class="i" style="width:28px;height:28px"><use href="#i-bottle"/></svg></div>
+          <div style="text-align:center"><svg class="i" style="width:28px;height:28px"><use href="#i-carafe"/></svg></div>
+        </div>
+        <div style="text-align:center;font-size:40px;font-weight:700;margin:18px 0 4px">280 <span style="font-size:16px;color:var(--mut)">ml</span></div>
+        <div style="height:6px;background:#1d4466;border-radius:3px;margin:10px 6px;position:relative"><div style="width:37%;height:100%;background:var(--acc);border-radius:3px"></div><div style="position:absolute;left:37%;top:-7px;width:20px;height:20px;border-radius:50%;background:#fff;margin-left:-10px"></div></div>
+        <div style="display:flex;justify-content:space-between;margin-top:18px;font-size:13px">
+          <div class="pill">📅 Today</div><div class="pill">🕘 09:41</div><div class="pill">☆ Save as favorite</div>
+        </div>
+        <div style="margin-top:26px;background:var(--acc);color:var(--accd);border-radius:20px;padding:13px;text-align:center;font-weight:700">Add 280 ml</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= ICONS ======================= -->
+<h2>Preset icon set</h2>
+<p class="lead">One consistent line-icon family, used everywhere: favorites, sheet, widget, shortcuts, calendar entries. Water = blue, alcohol = pink. Custom amounts choose any of these icons. Default ABV editable per preset.</p>
+<div class="icons">
+  <div class="ic"><svg class="i"><use href="#i-glass-s"/></svg><b>Small glass</b><small>150 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-glass"/></svg><b>Glass</b><small>200 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-mug"/></svg><b>Cup / mug</b><small>250 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-glass-l"/></svg><b>Large glass</b><small>300 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-bottle-s"/></svg><b>Small bottle</b><small>330 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-bottle"/></svg><b>Bottle</b><small>500 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-sport"/></svg><b>Sports bottle</b><small>750 ml</small></div>
+  <div class="ic"><svg class="i"><use href="#i-carafe"/></svg><b>Carafe</b><small>1 L</small></div>
+  <div class="ic"><svg class="i"><use href="#i-bottle-l"/></svg><b>Large bottle</b><small>1.5 L</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-sekt"/></svg><b>Sparkling wine</b><small>0.1 L · 11 %</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-wine"/></svg><b>Wine</b><small>0.2 L · 12.5 %</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-beer"/></svg><b>Beer</b><small>0.5 L · 5 %</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-weizen"/></svg><b>Wheat beer</b><small>0.5 L · 5.4 %</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-cocktail"/></svg><b>Long drink</b><small>0.3 L · 6 %</small></div>
+  <div class="ic alc"><svg class="i"><use href="#i-shot"/></svg><b>Shot</b><small>2 cl · 40 %</small></div>
+</div>
+
+<!-- ======================= WIDGETS ======================= -->
+<h2>Home-screen widgets</h2>
+<p class="lead">One resizable widget with responsive layouts (it switches layout when you resize it) – default 4×1. Each widget instance has its own configuration (shown right).</p>
+<div class="row">
+  <div class="homebg">
+    <!-- 4x1 default -->
+    <div class="w" style="grid-column:span 4;display:flex;align-items:center;gap:12px">
+      <svg width="44" height="44" viewBox="0 0 108 108"><use href="#mate-body"/><circle cx="45" cy="66" r="5" fill="#0b2c48"/><circle cx="63" cy="66" r="5" fill="#0b2c48"/><path d="M44 78 Q54 87 64 78" stroke="#0b2c48" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+      <div style="flex:1.2">
+        <div style="font-size:13px;font-weight:700;margin-bottom:6px">1.80 / 2.60 L <span style="color:var(--mut);font-weight:400">· 69 %</span></div>
+        <div class="wbar"><div style="width:69%"></div></div>
+      </div>
+      <div style="display:flex;gap:6px;flex:1.4">
+        <div class="wbtn"><svg class="i"><use href="#i-glass"/></svg>200</div>
+        <div class="wbtn"><svg class="i"><use href="#i-mug"/></svg>250</div>
+        <div class="wbtn"><svg class="i"><use href="#i-bottle"/></svg>500</div>
+      </div>
+      <div class="lab">4×1 (default)</div>
+    </div>
+    <!-- 2x2 -->
+    <div class="w" style="grid-column:span 2;grid-row:span 2;display:flex;flex-direction:column;align-items:center;justify-content:space-between">
+      <svg width="120" height="120" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#1d4466" stroke-width="11"/>
+        <circle cx="60" cy="60" r="50" fill="none" stroke="#3fa7ff" stroke-width="11" stroke-linecap="round" stroke-dasharray="217 314" transform="rotate(-90 60 60)"/>
+        <g transform="translate(36 28) scale(.44)"><use href="#mate-body"/><circle cx="45" cy="66" r="5" fill="#0b2c48"/><circle cx="63" cy="66" r="5" fill="#0b2c48"/><path d="M44 78 Q54 87 64 78" stroke="#0b2c48" stroke-width="5" fill="none" stroke-linecap="round"/></g>
+        <text x="60" y="98" text-anchor="middle" font-size="13" font-weight="700" fill="#e6f3ff">1.80 L</text>
+      </svg>
+      <div style="display:flex;gap:6px;width:100%">
+        <div class="wbtn"><svg class="i"><use href="#i-glass"/></svg>200</div>
+        <div class="wbtn"><svg class="i"><use href="#i-bottle"/></svg>500</div>
+      </div>
+      <div class="lab">2×2</div>
+    </div>
+    <!-- 1x1 -->
+    <div class="w" style="display:flex;align-items:center;justify-content:center;padding:6px">
+      <svg width="86" height="86" viewBox="0 0 120 120">
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#1d4466" stroke-width="10"/>
+        <circle cx="60" cy="60" r="52" fill="none" stroke="#3fa7ff" stroke-width="10" stroke-linecap="round" stroke-dasharray="225 327" transform="rotate(-90 60 60)"/>
+        <text x="60" y="68" text-anchor="middle" font-size="24" font-weight="700" fill="#e6f3ff">69%</text>
+      </svg>
+      <div class="lab">1×1 · tap = +200 ml</div>
+    </div>
+    <!-- 2x1 -->
+    <div class="w" style="display:flex;flex-direction:column;justify-content:center;gap:8px">
+      <div style="font-size:12px;font-weight:700">1.80 L · 69%</div>
+      <div class="wbar"><div style="width:69%"></div></div>
+      <div class="lab">1×1 alt: bar</div>
+    </div>
+    <!-- 4x2 -->
+    <div class="w" style="grid-column:span 4;grid-row:span 2;display:flex;gap:14px;align-items:center">
+      <svg width="110" height="200" viewBox="0 0 150 200">
+        <defs><clipPath id="gl2"><path d="M18 20 H132 L118 196 H32 Z"/></clipPath></defs>
+        <g clip-path="url(#gl2)"><path d="M0 75 Q 20 65 40 75 T 80 75 T 120 75 T 160 75 V 210 H0 Z" fill="url(#wt)"/></g>
+        <path d="M18 20 H132 L118 196 H32 Z" fill="none" stroke="#9fd2ff" stroke-width="4" stroke-linejoin="round"/>
+        <text x="75" y="145" text-anchor="middle" font-size="30" font-weight="700" fill="#fff">69%</text>
+      </svg>
+      <div style="flex:1;display:flex;flex-direction:column;gap:10px">
+        <div style="font-size:20px;font-weight:700">1.80 <span style="font-size:13px;color:var(--mut);font-weight:400">/ 2.60 L</span></div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap">
+          <div class="pill">🔥 12</div><div class="pill"><svg class="i"><use href="#i-shield"/></svg>1</div><div class="pill"><svg class="i"><use href="#i-bell"/></svg>11:30</div>
+        </div>
+        <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:6px">
+          <div class="wbtn" style="flex-direction:column;padding:8px 0"><svg class="i"><use href="#i-glass"/></svg>200</div>
+          <div class="wbtn" style="flex-direction:column;padding:8px 0"><svg class="i"><use href="#i-mug"/></svg>250</div>
+          <div class="wbtn" style="flex-direction:column;padding:8px 0"><svg class="i"><use href="#i-bottle"/></svg>500</div>
+          <div class="wbtn" style="flex-direction:column;padding:8px 0"><svg class="i"><use href="#i-undo"/></svg>Undo</div>
+        </div>
+      </div>
+      <div class="lab">4×2</div>
+    </div>
+  </div>
+
+  <!-- Widget config -->
+  <div class="variant">
+    <div class="tag">Widget configuration<small>Opens when placing the widget, or via long-press → "Settings" on it.</small></div>
+    <div class="phone cfg">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="t" style="font-size:18px;font-weight:700;margin:6px 0 10px">Widget settings</div>
+        <div class="daycard">
+          <b>Buttons</b> <span style="color:var(--mut)">(drag to reorder, max 4)</span>
+          <div class="entry"><span><svg class="i" style="color:var(--acc)"><use href="#i-glass"/></svg> 200 ml</span><span>☰</span></div>
+          <div class="entry"><span><svg class="i" style="color:var(--acc)"><use href="#i-mug"/></svg> 250 ml</span><span>☰</span></div>
+          <div class="entry"><span><svg class="i" style="color:var(--acc)"><use href="#i-bottle"/></svg> 500 ml</span><span>☰</span></div>
+          <div class="entry" style="color:var(--acc)"><span>＋ Add button</span></div>
+        </div>
+        <div class="daycard">
+          <div class="entry"><span>Show Drop Mate</span><span>●━</span></div>
+          <div class="entry"><span>Show streak / reminder</span><span>●━</span></div>
+          <div class="entry"><span>Undo button</span><span>━○</span></div>
+          <div class="entry"><span>1×1 tap action</span><span style="color:var(--acc)">+200 ml ▾</span></div>
+        </div>
+        <div class="daycard">
+          <div class="entry"><span>Background</span><span style="color:var(--acc)">Dark ▾</span></div>
+          <div class="entry"><span>Opacity</span><span>90 %</span></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= OTHER SURFACES ======================= -->
+<h2>Shortcuts, Now Bar, notifications, calendar</h2>
+<div class="row">
+
+  <div class="variant">
+    <div class="tag">Long-press app icon<small>3 user-chosen favorites + Undo. Labels are just the amount (and ABV for alcohol).</small></div>
+    <div class="phone" style="background:linear-gradient(135deg,#f2a65a,#725ac1)">
+      <div class="punch"></div>
+      <div class="status" style="color:#fff"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div style="position:absolute;left:116px;top:200px;width:58px;height:58px;border-radius:50%;background:#3fa7ff;display:flex;align-items:center;justify-content:center;box-shadow:0 0 0 4px rgba(255,255,255,.6)">
+        <svg width="46" height="46" viewBox="0 0 108 108"><use href="#mate-body"/><circle cx="45" cy="66" r="5" fill="#0b2c48"/><circle cx="63" cy="66" r="5" fill="#0b2c48"/><path d="M44 78 Q54 87 64 78" stroke="#0b2c48" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+      </div>
+      <div style="position:absolute;left:24px;top:270px;width:230px;background:#0f2f4c;color:var(--txt);border-radius:22px;padding:8px;box-shadow:0 10px 30px rgba(0,0,0,.35);font-size:13px">
+        <div class="entry" style="padding:10px"><span><svg class="i" style="color:var(--acc)"><use href="#i-glass"/></svg>&nbsp; +200 ml</span></div>
+        <div class="entry" style="padding:10px"><span><svg class="i" style="color:var(--acc)"><use href="#i-bottle"/></svg>&nbsp; +500 ml</span></div>
+        <div class="entry" style="padding:10px"><span><svg class="i" style="color:#f2b6ff"><use href="#i-wine"/></svg>&nbsp; +0.2 L wine 12.5 %</span></div>
+        <div class="entry" style="padding:10px"><span><svg class="i"><use href="#i-undo"/></svg>&nbsp; Undo last entry</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="tag">Lock screen · Now Bar / Live Update<small>Ongoing progress during your wake window. Disappears (with a 🎉) once the goal is reached.</small></div>
+    <div class="phone" style="background:linear-gradient(180deg,#1b2433,#0b0f16)">
+      <div class="punch"></div>
+      <div class="status"><span></span><span>5G ▮▮▮ 87%</span></div>
+      <div style="text-align:center;margin-top:60px;font-size:64px;font-weight:300;color:#fff">9:41</div>
+      <div style="text-align:center;color:#cfd8e3;font-size:14px">Wednesday, 5 November</div>
+      <div style="position:absolute;left:22px;right:22px;bottom:90px;background:rgba(30,40,55,.9);border-radius:30px;padding:10px 14px;display:flex;align-items:center;gap:10px">
+        <svg width="34" height="34" viewBox="0 0 108 108"><path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" fill="#3fa7ff"/><circle cx="45" cy="66" r="5" fill="#04223d"/><circle cx="63" cy="66" r="5" fill="#04223d"/><path d="M44 78 Q54 87 64 78" stroke="#04223d" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+        <div style="flex:1">
+          <div style="font-size:13px;font-weight:700;color:#fff">1.80 / 2.60 L</div>
+          <div class="wbar" style="height:6px;margin-top:5px"><div style="width:69%"></div></div>
+        </div>
+        <div style="font-size:12px;color:#9fb0c3">69 %</div>
+      </div>
+      <div style="position:absolute;left:0;right:0;bottom:40px;display:flex;justify-content:center;gap:6px"><span style="width:6px;height:6px;border-radius:50%;background:#fff"></span><span style="width:6px;height:6px;border-radius:50%;background:#555"></span></div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="tag">Notifications<small>Reminder actions = your notification favorites (Android shows max 3 buttons). Milestones as their own channel.</small></div>
+    <div class="phone" style="background:#1f2329">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div style="margin:24px 14px 0;background:#2d333b;border-radius:22px;padding:14px">
+        <div style="font-size:11px;color:#9aa7b4">Hydr8M8 · Milestone · now</div>
+        <div style="font-weight:700;margin-top:4px">🏆 One month of hydration!</div>
+        <div style="font-size:13px;color:#cdd6df;margin-top:2px">30 days at 100 %. That's ~75 L – about half a bathtub, but inside you. Mate is proud.</div>
+      </div>
+      <div style="margin:10px 14px 0;background:#2d333b;border-radius:22px;padding:14px">
+        <div style="font-size:11px;color:#9aa7b4">Hydr8M8 · Reminder · 1 h ago</div>
+        <div style="font-weight:700;margin-top:4px">💧 Mate is getting thirsty</div>
+        <div style="font-size:13px;color:#cdd6df;margin-top:2px">Last drink 2 h 10 min ago · 0.8 L to go.</div>
+        <div style="display:flex;gap:6px;margin-top:10px;font-size:12px">
+          <span style="background:#3d6fa3;border-radius:16px;padding:6px 9px">+200 ml</span>
+          <span style="background:#3d6fa3;border-radius:16px;padding:6px 9px">+500 ml</span>
+          <span style="background:#3a4049;border-radius:16px;padding:6px 9px">Snooze 30 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="tag">Calendar<small>Levels: 0 · 1–90 · 91–99 · 100 %+. 🛡 = day saved by a joker. Tap a day to edit/add entries.</small></div>
+    <div class="phone">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="hdr"><div><div class="d">‹ Oct</div><div class="t">October 2026</div></div><div class="d">Nov ›</div></div>
+        <div class="cal" id="cal"></div>
+        <div class="legend" id="legend"></div>
+        <div class="daycard">
+          <b>Tue, 20 Oct · 93 %</b> <span style="color:var(--mut)">2.04 / 2.20 L</span>
+          <div class="entry"><span><svg class="i" style="color:var(--acc)"><use href="#i-glass"/></svg> 08:10 · 200 ml</span><span>✎</span></div>
+          <div class="entry"><span><svg class="i" style="color:var(--acc)"><use href="#i-bottle"/></svg> 12:45 · 500 ml</span><span>✎</span></div>
+          <div class="entry" style="color:var(--acc)"><span>＋ Add entry for this day</span></div>
+        </div>
+      </div>
+      <div class="navbar"><div><i></i>Today</div><div class="on"><i></i>Calendar</div><div><i></i>Stats</div><div><i></i>Settings</div></div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= MATE MOODS ======================= -->
+<h2>Drop Mate moods (F11)</h2>
+<p class="lead">Shown on the home screen, widget, Now Bar and in notifications. Mood follows how you're doing <i>relative to where you should be by now</i>, not just the raw percentage.</p>
+<div class="moods" id="moods"></div>
+
+<script>
+  // ---- Calendar (October 2026 starts on a Thursday) ----
+  const levels = [
+    { min: 0,   max: 0,   bg: '#12304b', fg: '#5d7d99', label: 'nothing' },
+    { min: 1,   max: 90,  bg: '#1b5583', fg: '#e6f3ff', label: '1–90 %' },
+    { min: 91,  max: 99,  bg: '#3fa7ff', fg: '#04223d', label: '91–99 %' },
+    { min: 100, max: 999, bg: '#9fe0ff', fg: '#04223d', label: '100 %+' },
+  ];
+  const lvl = p => levels.find(l => p >= l.min && p <= l.max);
+  const cal = document.getElementById('cal');
+  'MTWTFSS'.split('').forEach(d => cal.insertAdjacentHTML('beforeend', `<div class="h">${d}</div>`));
+  for (let i = 0; i < 3; i++) cal.insertAdjacentHTML('beforeend', '<div></div>');
+  const pct = [100,104,96,100,0,45,100,110,100,100,62,100,100,100,30,100,100,100,100,93,100,105,100,100,100,100,101,100,120,100,100];
+  const marks = { 11: '🛡' };
+  pct.forEach((p, i) => {
+    const l = lvl(p), day = i + 1;
+    const ring = p >= 100 ? 'box-shadow:0 0 0 2px #0b2c48,0 0 0 3px #9fe0ff;' : '';
+    cal.insertAdjacentHTML('beforeend', `<div class="d" style="background:${l.bg};color:${l.fg};${ring}">${day}${marks[day] ? `<sup>${marks[day]}</sup>` : ''}</div>`);
+  });
+  document.getElementById('legend').innerHTML = levels.map(l => `<span><i style="background:${l.bg}"></i>${l.label}</span>`).join('');
+
+  // ---- Mate moods ----
+  const body = '<path d="M54 10 C54 10 22 46 22 68 a32 32 0 0 0 64 0 C86 46 54 10 54 10Z" fill="#fff"/>';
+  const ink = '#0b2c48';
+  const moods = [
+    { n: 'Champion!', w: 'Goal reached', f: `
+        <path d="M27 60 L10 34" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="9" cy="32" r="5.5" fill="#fff"/>
+        <path d="M81 60 L98 34" stroke="#fff" stroke-width="7" stroke-linecap="round"/><circle cx="99" cy="32" r="5.5" fill="#fff"/>
+        <path d="M45 58 l2.2 4.6 5 .7 -3.6 3.5 .9 5 -4.5 -2.4 -4.5 2.4 .9 -5 -3.6 -3.5 5 -.7z" fill="#ffc83d" stroke="${ink}" stroke-width="1.2"/>
+        <path d="M63 58 l2.2 4.6 5 .7 -3.6 3.5 .9 5 -4.5 -2.4 -4.5 2.4 .9 -5 -3.6 -3.5 5 -.7z" fill="#ffc83d" stroke="${ink}" stroke-width="1.2"/>
+        <path d="M40 77 Q54 98 68 77 Z" fill="${ink}"/><path d="M47 86 Q54 92 61 86 Q54 83 47 86Z" fill="#ff8fa3"/>
+        <ellipse cx="34" cy="78" rx="4.5" ry="2.8" fill="#ffb3c1"/><ellipse cx="74" cy="78" rx="4.5" ry="2.8" fill="#ffb3c1"/>
+        <rect x="20" y="12" width="5" height="5" fill="#ffc83d" transform="rotate(20 22 14)"/><rect x="82" y="8" width="5" height="5" fill="#ff8fa3" transform="rotate(-25 84 10)"/>
+        <circle cx="70" cy="18" r="2.5" fill="#9fe0ff"/><circle cx="34" cy="22" r="2.5" fill="#f2b6ff"/>
+        <path d="M54 0 l2 5 5 2 -5 2 -2 5 -2 -5 -5 -2 5 -2z" fill="#ffc83d"/>` },
+    { n: 'Happy', w: 'On track', f: `<circle cx="45" cy="66" r="5" fill="${ink}"/><circle cx="63" cy="66" r="5" fill="${ink}"/><path d="M44 78 Q54 87 64 78" stroke="${ink}" stroke-width="5" fill="none" stroke-linecap="round"/><ellipse cx="37" cy="74" rx="4" ry="2.5" fill="#ffb3c1"/><ellipse cx="71" cy="74" rx="4" ry="2.5" fill="#ffb3c1"/>` },
+    { n: 'Thirsty', w: 'Behind schedule', f: `<circle cx="45" cy="66" r="5" fill="${ink}"/><circle cx="63" cy="66" r="5" fill="${ink}"/><path d="M45 82 Q54 76 63 82" stroke="${ink}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M76 50 q4 8 0 12 q-4 -4 0 -12z" fill="#9fd2ff"/>` },
+    { n: 'Very thirsty', w: 'Far behind', f: `
+        <path d="M37 58 L49 54 M71 58 L59 54" stroke="${ink}" stroke-width="3.5" stroke-linecap="round"/>
+        <path d="M39 65 h12 a6 6 0 0 1 -12 0z" fill="${ink}"/><path d="M57 65 h12 a6 6 0 0 1 -12 0z" fill="${ink}"/>
+        <path d="M45 82 q4.5 -4 9 0 q4.5 4 9 0" stroke="${ink}" stroke-width="4" fill="none" stroke-linecap="round"/>
+        <path d="M78 46 q5 9 0 13 q-5 -4 0 -13z" fill="#9fd2ff"/>
+        <g transform="translate(84 68)"><path d="M0 0 h12 l-1.5 16 h-9z" fill="none" stroke="#9fd2ff" stroke-width="2.5" stroke-linejoin="round"/></g>` },
+    { n: 'Tipsy', w: 'Alcohol logged today', f: `<path d="M39 66 q6 -5 12 0 M57 66 q6 -5 12 0" stroke="${ink}" stroke-width="5" fill="none" stroke-linecap="round"/><path d="M45 79 Q50 84 56 79 Q60 76 64 80" stroke="${ink}" stroke-width="4.5" fill="none" stroke-linecap="round"/><ellipse cx="37" cy="74" rx="5" ry="3" fill="#ff8fa3"/><ellipse cx="71" cy="74" rx="5" ry="3" fill="#ff8fa3"/>` },
+    { n: 'Sleepy', w: 'Sleep window', f: `<path d="M39 67 h12 M57 67 h12" stroke="${ink}" stroke-width="5" stroke-linecap="round"/><circle cx="54" cy="80" r="4" fill="${ink}"/><text x="72" y="36" font-size="16" fill="#9fd2ff" font-weight="700">z</text><text x="82" y="24" font-size="12" fill="#9fd2ff" font-weight="700">z</text>` },
+  ];
+  document.getElementById('moods').innerHTML = moods.map(m =>
+    `<div class="mood"><svg width="90" height="90" viewBox="0 0 108 108">${body}${m.f}</svg><b>${m.n}</b><small>${m.w}</small></div>`).join('');
+</script>
+</body>
+</html>

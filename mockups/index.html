@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Hydr8M8 – Mockups</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<style>
+  :root { --ink:#1b1f24; --muted:#5d6670; --bg:#eef2f5; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family: "Segoe UI", Roboto, system-ui, sans-serif; background:var(--bg); color:var(--ink); }
+  header { padding:32px 40px 8px; }
+  h1 { margin:0 0 4px; font-size:28px; }
+  h2 { margin:40px 40px 4px; font-size:22px; }
+  p.lead { margin:0 40px 16px; color:var(--muted); max-width:900px; }
+  .row { display:flex; flex-wrap:wrap; gap:36px; padding:16px 40px 8px; align-items:flex-start; }
+  .variant { display:flex; flex-direction:column; gap:10px; }
+  .tag { font-weight:700; font-size:15px; }
+  .tag small { display:block; font-weight:400; color:var(--muted); max-width:300px; margin-top:2px; }
+
+  /* phone frame */
+  .phone { width:300px; height:640px; border-radius:38px; border:9px solid #111; position:relative; overflow:hidden; box-shadow:0 12px 30px rgba(0,0,0,.18); }
+  .status { height:26px; display:flex; justify-content:space-between; align-items:center; padding:0 22px; font-size:11px; font-weight:600; }
+  .punch { position:absolute; top:7px; left:50%; width:12px; height:12px; margin-left:-6px; background:#000; border-radius:50%; }
+  .screen { padding:10px 18px; }
+  .navbar { position:absolute; bottom:0; left:0; right:0; height:62px; display:flex; justify-content:space-around; align-items:center; font-size:10px; }
+  .navbar div { display:flex; flex-direction:column; align-items:center; gap:3px; }
+  .navbar i { display:block; width:22px; height:22px; border-radius:7px; }
+
+  /* ---------- A: Material You ---------- */
+  .a { background:#f6fbff; color:#0f1d2a; }
+  .a .title { font-size:22px; font-weight:600; margin:6px 0 2px; }
+  .a .sub { font-size:12px; color:#53606c; }
+  .ring { position:relative; width:200px; height:200px; margin:18px auto 8px; }
+  .ring .center { position:absolute; inset:0; display:flex; flex-direction:column; align-items:center; justify-content:center; }
+  .ring .big { font-size:34px; font-weight:700; }
+  .ring .small { font-size:12px; color:#53606c; }
+  .chips { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:10px; }
+  .chip { background:#d3e7fb; border-radius:16px; padding:10px 4px; text-align:center; font-size:12px; font-weight:600; }
+  .chip.alt { background:#e8eef4; color:#40505e; }
+  .a .streak { margin-top:14px; background:#fff; border-radius:18px; padding:12px 14px; display:flex; justify-content:space-between; font-size:13px; box-shadow:0 1px 3px rgba(0,0,0,.08); }
+  .a .navbar { background:#e7f0f8; }
+  .a .navbar i { background:#b4cfe8; }
+  .a .navbar .on i { background:#2b6cb0; }
+  .fab { position:absolute; right:18px; bottom:78px; width:58px; height:58px; border-radius:18px; background:#2b6cb0; color:#fff; font-size:30px; display:flex; align-items:center; justify-content:center; box-shadow:0 4px 10px rgba(43,108,176,.4); }
+
+  /* ---------- B: Liquid glass, dark ---------- */
+  .b { background:linear-gradient(180deg,#071a2c,#0b2c48); color:#e6f3ff; }
+  .b .status { color:#cfe4f7; }
+  .b .hello { font-size:13px; color:#8fb5d6; margin-top:6px; }
+  .b .amount { font-size:40px; font-weight:700; margin-top:2px; }
+  .b .amount span { font-size:16px; color:#8fb5d6; font-weight:400; }
+  .glass { margin:14px auto 0; width:150px; height:230px; position:relative; }
+  .b .swipe { text-align:center; font-size:11px; color:#8fb5d6; margin-top:6px; }
+  .b .sizes { display:flex; gap:8px; justify-content:center; margin-top:14px; }
+  .b .sz { border:1px solid #2f5b82; border-radius:22px; padding:8px 12px; font-size:12px; }
+  .b .sz.on { background:#3fa7ff; border-color:#3fa7ff; color:#04223d; font-weight:700; }
+  .b .navbar { background:rgba(255,255,255,.04); color:#8fb5d6; }
+  .b .navbar i { background:#1d4466; }
+  .b .navbar .on { color:#3fa7ff; }
+  .b .navbar .on i { background:#3fa7ff; }
+
+  /* ---------- C: Bento dashboard ---------- */
+  .c { background:#fbf8f3; color:#1d1b18; }
+  .c .top { display:flex; justify-content:space-between; align-items:center; margin-top:6px; }
+  .c .top b { font-size:20px; }
+  .bento { display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-top:12px; }
+  .card { border-radius:20px; padding:12px; font-size:12px; }
+  .card .k { color:#6b665e; font-size:11px; }
+  .card .v { font-size:22px; font-weight:700; margin-top:2px; }
+  .today { grid-column:span 2; background:#0e7c86; color:#fff; display:flex; justify-content:space-between; align-items:center; }
+  .today .k { color:#bfe9ec; }
+  .bar { height:10px; border-radius:6px; background:rgba(255,255,255,.25); margin-top:8px; width:150px; overflow:hidden; }
+  .bar div { height:100%; width:72%; background:#fff; }
+  .plus { width:54px; height:54px; border-radius:50%; background:#fff; color:#0e7c86; font-size:30px; font-weight:700; display:flex; align-items:center; justify-content:center; }
+  .streakc { background:#ffe2c6; }
+  .totalc { background:#e3e9ff; }
+  .weekc { grid-column:span 2; background:#fff; border:1px solid #eee5d8; }
+  .bars { display:flex; align-items:flex-end; gap:10px; height:70px; margin-top:8px; }
+  .bars div { flex:1; background:#9fd3d8; border-radius:6px 6px 2px 2px; }
+  .bars div.full { background:#0e7c86; }
+  .days { display:flex; gap:10px; font-size:10px; color:#6b665e; margin-top:4px; }
+  .days span { flex:1; text-align:center; }
+  .alc { grid-column:span 2; background:#f3e6f7; display:flex; justify-content:space-between; align-items:center; }
+  .c .navbar { background:#f1ebe1; color:#6b665e; }
+  .c .navbar i { background:#ddd3c4; }
+  .c .navbar .on { color:#0e7c86; }
+  .c .navbar .on i { background:#0e7c86; }
+
+  /* ---------- extra screens ---------- */
+  .home { background:url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="300" height="640"><defs><linearGradient id="g" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="%23f2a65a"/><stop offset="1" stop-color="%23725ac1"/></linearGradient></defs><rect width="300" height="640" fill="url(%23g)"/></svg>'); }
+  .apps { display:grid; grid-template-columns:repeat(4,1fr); gap:22px 10px; padding:60px 20px 0; }
+  .app { width:52px; height:52px; border-radius:50%; background:rgba(255,255,255,.55); margin:auto; }
+  .menu { position:absolute; left:24px; top:262px; width:220px; background:#fff; border-radius:22px; padding:8px; box-shadow:0 10px 30px rgba(0,0,0,.3); font-size:13px; }
+  .menu div { padding:10px 12px; display:flex; gap:10px; align-items:center; border-radius:14px; }
+  .menu div:hover { background:#eef5fc; }
+  .menu em { width:24px; height:24px; border-radius:50%; background:#d3e7fb; display:inline-flex; align-items:center; justify-content:center; font-style:normal; font-size:12px; color:#2b6cb0; }
+  .appicon { position:absolute; left:116px; top:192px; width:58px; height:58px; border-radius:50%; overflow:hidden; box-shadow:0 0 0 4px rgba(255,255,255,.6); }
+
+  .cal { display:grid; grid-template-columns:repeat(7,1fr); gap:6px; margin-top:12px; }
+  .cal .h { font-size:10px; text-align:center; color:#53606c; }
+  .cal .d { aspect-ratio:1; border-radius:50%; display:flex; align-items:center; justify-content:center; font-size:11px; font-weight:600; position:relative; }
+  .legend { display:flex; gap:10px; margin-top:12px; font-size:10px; color:#53606c; align-items:center; }
+  .legend i { width:12px; height:12px; border-radius:50%; display:inline-block; margin-right:4px; vertical-align:middle; }
+
+  /* ---------- logos ---------- */
+  .logos { display:flex; flex-wrap:wrap; gap:28px; padding:16px 40px 60px; }
+  .logo { background:#fff; border-radius:24px; padding:20px; width:250px; text-align:center; box-shadow:0 2px 8px rgba(0,0,0,.06); }
+  .logo .tiles { display:flex; justify-content:center; gap:14px; align-items:center; margin-bottom:12px; }
+  .logo .name { font-weight:700; }
+  .logo small { color:var(--muted); display:block; margin-top:4px; }
+</style>
+</head>
+<body>
+<header>
+  <h1>Hydr8M8 – UI &amp; logo mockups</h1>
+  <p style="margin:0;color:var(--muted)">Static concept sketches (not pixel-perfect). Pick a UI direction (A/B/C) and a logo (1–4) – mixing is fine.</p>
+</header>
+
+<!-- ======================= UI DIRECTIONS ======================= -->
+<h2>UI directions – home screen</h2>
+<p class="lead">All three follow Material&nbsp;3. A is closest to stock One&nbsp;UI/Material You (dynamic colors from wallpaper). B is playful and dark-first. C puts everything on one page as a "bento" dashboard.</p>
+<div class="row">
+
+  <!-- A -->
+  <div class="variant">
+    <div class="tag">A · Material You "Ring"<small>Progress ring, one-tap size chips, FAB for custom amount. Adopts wallpaper colors.</small></div>
+    <div class="phone a">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="title">Today</div>
+        <div class="sub">Wed, 5 Nov · next reminder 11:30</div>
+        <div class="ring">
+          <svg width="200" height="200" viewBox="0 0 200 200">
+            <circle cx="100" cy="100" r="84" fill="none" stroke="#d9e6f2" stroke-width="16"/>
+            <circle cx="100" cy="100" r="84" fill="none" stroke="#2b6cb0" stroke-width="16" stroke-linecap="round"
+                    stroke-dasharray="380 528" transform="rotate(-90 100 100)"/>
+          </svg>
+          <div class="center"><div class="big">1.80 L</div><div class="small">of 2.50 L · 72 %</div></div>
+        </div>
+        <div class="chips">
+          <div class="chip">🥛 200 ml</div>
+          <div class="chip">🥤 330 ml</div>
+          <div class="chip">🍶 500 ml</div>
+          <div class="chip alt">☕ 250 ml</div>
+          <div class="chip alt">🍺 Beer</div>
+          <div class="chip alt">＋ Custom</div>
+        </div>
+        <div class="streak"><span>🔥 Streak <b>12 days</b></span><span>Total <b>412 L</b></span></div>
+      </div>
+      <div class="fab">＋</div>
+      <div class="navbar">
+        <div class="on"><i></i>Today</div><div><i></i>Calendar</div><div><i></i>Stats</div><div><i></i>Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- B -->
+  <div class="variant">
+    <div class="tag">B · Liquid "Glass"<small>Animated glass fills with water (tilts with the gyroscope). Swipe up on the glass = log selected size.</small></div>
+    <div class="phone b">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="hello">Good morning, Felix 👋</div>
+        <div class="amount">1.80 L <span>/ 2.50 L</span></div>
+        <div class="glass">
+          <svg width="150" height="230" viewBox="0 0 150 230">
+            <defs>
+              <clipPath id="gl"><path d="M14 8 H136 L120 222 H30 Z"/></clipPath>
+              <linearGradient id="wt" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#5cc3ff"/><stop offset="1" stop-color="#1572c9"/></linearGradient>
+            </defs>
+            <g clip-path="url(#gl)">
+              <path d="M0 75 Q 20 64 40 75 T 80 75 T 120 75 T 160 75 V 240 H0 Z" fill="url(#wt)"/>
+              <path d="M0 82 Q 25 92 50 82 T 100 82 T 150 82 V 240 H0 Z" fill="#1d8be0" opacity=".55"/>
+              <circle cx="50" cy="150" r="4" fill="#bfe6ff" opacity=".7"/><circle cx="92" cy="180" r="3" fill="#bfe6ff" opacity=".7"/><circle cx="74" cy="120" r="2.5" fill="#bfe6ff" opacity=".7"/>
+            </g>
+            <path d="M14 8 H136 L120 222 H30 Z" fill="none" stroke="#9fd2ff" stroke-width="3" stroke-linejoin="round"/>
+            <text x="75" y="150" text-anchor="middle" font-size="28" font-weight="700" fill="#fff">72%</text>
+          </svg>
+        </div>
+        <div class="swipe">⇡ swipe up to drink 330 ml</div>
+        <div class="sizes">
+          <div class="sz">200</div><div class="sz on">330</div><div class="sz">500</div><div class="sz">🍷</div><div class="sz">…</div>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="on"><i></i>Today</div><div><i></i>History</div><div><i></i>Stats</div><div><i></i>Me</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- C -->
+  <div class="variant">
+    <div class="tag">C · Bento dashboard<small>Everything at a glance. Big "+" logs your default size, long-press opens size picker.</small></div>
+    <div class="phone c">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="top"><b>Hydr8M8</b><span style="font-size:12px;color:#6b665e">Wed 5 Nov</span></div>
+        <div class="bento">
+          <div class="card today">
+            <div><div class="k">Today</div><div class="v">1.80 / 2.50 L</div><div class="bar"><div></div></div></div>
+            <div class="plus">+</div>
+          </div>
+          <div class="card streakc"><div class="k">Streak</div><div class="v">🔥 12</div><div class="k">best: 31</div></div>
+          <div class="card totalc"><div class="k">Since start</div><div class="v">412 L</div><div class="k">+96 L vs. avg</div></div>
+          <div class="card weekc">
+            <div class="k">This week</div>
+            <div class="bars"><div class="full" style="height:100%"></div><div class="full" style="height:100%"></div><div style="height:70%"></div><div class="full" style="height:100%"></div><div style="height:85%"></div><div style="height:60%"></div><div style="height:72%"></div></div>
+            <div class="days"><span>M</span><span>T</span><span>W</span><span>T</span><span>F</span><span>S</span><span>S</span></div>
+          </div>
+          <div class="card alc"><div><div class="k">Alcohol today</div><b>1 × beer 0.5 L, 5 %</b></div><div style="font-weight:700">−0.40 L</div></div>
+        </div>
+      </div>
+      <div class="navbar">
+        <div class="on"><i></i>Home</div><div><i></i>Calendar</div><div><i></i>Log</div><div><i></i>Settings</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= SUPPORTING SCREENS ======================= -->
+<h2>Supporting screens (style A)</h2>
+<p class="lead">Launcher long-press shortcuts (logs without opening the app) and the calendar heatmap with % of goal per day. Tapping a past day opens it for back-filling.</p>
+<div class="row">
+  <div class="variant">
+    <div class="tag">Long-press app icon<small>Up to 4 favorite sizes as static/dynamic shortcuts. Each also pinnable to the home screen.</small></div>
+    <div class="phone home">
+      <div class="punch"></div>
+      <div class="status" style="color:#fff"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="apps">
+        <div class="app"></div><div class="app"></div><div class="app"></div><div class="app"></div>
+        <div class="app"></div><div class="app"></div><div class="app"></div><div class="app"></div>
+      </div>
+      <div class="appicon">
+        <svg viewBox="0 0 108 108" width="58" height="58"><rect width="108" height="108" fill="#2b6cb0"/><path d="M54 22 C54 22 30 50 30 66 a24 24 0 0 0 48 0 C78 50 54 22 54 22Z" fill="#fff"/><text x="54" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="#2b6cb0" font-family="Segoe UI, sans-serif">8</text></svg>
+      </div>
+      <div class="menu">
+        <div><em>🥛</em>Add 200 ml glass</div>
+        <div><em>🥤</em>Add 330 ml can</div>
+        <div><em>🍶</em>Add 500 ml bottle</div>
+        <div><em>↶</em>Undo last entry</div>
+        <div style="border-top:1px solid #eee;border-radius:0;color:#666">ⓘ App info</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="tag">Calendar<small>Color = % of goal. Ring marks 100 %+. Tap a day to see/edit entries.</small></div>
+    <div class="phone a">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div class="screen">
+        <div class="title">November 2026</div>
+        <div class="sub">Avg 91 % · 12-day streak 🔥</div>
+        <div class="cal" id="cal"></div>
+        <div class="legend"><span><i style="background:#e3edf6"></i>&lt;50%</span><span><i style="background:#9cc4ea"></i>50–99%</span><span><i style="background:#2b6cb0"></i>100%+</span></div>
+        <div class="streak" style="margin-top:16px;flex-direction:column;gap:4px">
+          <b>Tue, 4 Nov – 104 %</b>
+          <span style="color:#53606c;font-size:12px">8 entries · 2.60 L · 1 beer (−0.40 L)</span>
+        </div>
+      </div>
+      <div class="navbar">
+        <div><i></i>Today</div><div class="on"><i></i>Calendar</div><div><i></i>Stats</div><div><i></i>Settings</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="tag">Milestone notification<small>Example copy – final texts to be decided.</small></div>
+    <div class="phone" style="background:#1f2329;color:#fff">
+      <div class="punch"></div>
+      <div class="status"><span>9:41</span><span>5G ▮▮▮ 87%</span></div>
+      <div style="margin:30px 14px 0;background:#2d333b;border-radius:22px;padding:14px">
+        <div style="font-size:11px;color:#9aa7b4">Hydr8M8 · now</div>
+        <div style="font-weight:700;margin-top:4px">🔥 7 days straight!</div>
+        <div style="font-size:13px;color:#cdd6df;margin-top:2px">A full week at 100 %. Your kidneys just sent a thank-you note.</div>
+      </div>
+      <div style="margin:10px 14px 0;background:#2d333b;border-radius:22px;padding:14px">
+        <div style="font-size:11px;color:#9aa7b4">Hydr8M8 · 2 h ago</div>
+        <div style="font-weight:700;margin-top:4px">💧 Time for a sip?</div>
+        <div style="font-size:13px;color:#cdd6df;margin-top:2px">Nothing logged for 2 h · 0.9 L to go today.</div>
+        <div style="display:flex;gap:8px;margin-top:10px">
+          <span style="background:#3d6fa3;border-radius:16px;padding:6px 10px;font-size:12px">+200 ml</span>
+          <span style="background:#3d6fa3;border-radius:16px;padding:6px 10px;font-size:12px">+330 ml</span>
+          <span style="background:#3a4049;border-radius:16px;padding:6px 10px;font-size:12px">Snooze 30 min</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ======================= LOGOS ======================= -->
+<h2>Logo ideas</h2>
+<p class="lead">Each shown as adaptive icon (round + squircle mask) and monochrome (for Android 13+ themed icons).</p>
+<div class="logos">
+
+  <div class="logo">
+    <div class="tiles">
+      <svg width="72" height="72" viewBox="0 0 108 108"><clipPath id="c1"><circle cx="54" cy="54" r="54"/></clipPath><g clip-path="url(#c1)"><rect width="108" height="108" fill="#2b6cb0"/><path d="M54 18 C54 18 28 48 28 66 a26 26 0 0 0 52 0 C80 48 54 18 54 18Z" fill="#fff"/><text x="54" y="80" text-anchor="middle" font-size="30" font-weight="800" fill="#2b6cb0" font-family="Segoe UI, sans-serif">8</text></g></svg>
+      <svg width="72" height="72" viewBox="0 0 108 108"><rect width="108" height="108" rx="30" fill="#2b6cb0"/><path d="M54 18 C54 18 28 48 28 66 a26 26 0 0 0 52 0 C80 48 54 18 54 18Z" fill="#fff"/><text x="54" y="80" text-anchor="middle" font-size="30" font-weight="800" fill="#2b6cb0" font-family="Segoe UI, sans-serif">8</text></svg>
+      <svg width="40" height="40" viewBox="0 0 108 108"><path d="M54 18 C54 18 28 48 28 66 a26 26 0 0 0 52 0 C80 48 54 18 54 18Z" fill="#444"/><text x="54" y="80" text-anchor="middle" font-size="30" font-weight="800" fill="#fff" font-family="Segoe UI, sans-serif">8</text></svg>
+    </div>
+    <div class="name">1 · Drop-8</div><small>Classic drop with the "8" from Hydr8. Clean, readable at small sizes.</small>
+  </div>
+
+  <div class="logo">
+    <div class="tiles">
+      <svg width="72" height="72" viewBox="0 0 108 108"><clipPath id="c2"><circle cx="54" cy="54" r="54"/></clipPath><g clip-path="url(#c2)"><rect width="108" height="108" fill="#3fa7ff"/><path d="M54 16 C54 16 26 48 26 68 a28 28 0 0 0 56 0 C82 48 54 16 54 16Z" fill="#fff"/><circle cx="45" cy="64" r="4" fill="#0b2c48"/><circle cx="63" cy="64" r="4" fill="#0b2c48"/><path d="M44 76 Q54 85 64 76" stroke="#0b2c48" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="38" cy="72" rx="4" ry="2.5" fill="#ffb3c1"/><ellipse cx="70" cy="72" rx="4" ry="2.5" fill="#ffb3c1"/></g></svg>
+      <svg width="72" height="72" viewBox="0 0 108 108"><rect width="108" height="108" rx="30" fill="#3fa7ff"/><path d="M54 16 C54 16 26 48 26 68 a28 28 0 0 0 56 0 C82 48 54 16 54 16Z" fill="#fff"/><circle cx="45" cy="64" r="4" fill="#0b2c48"/><circle cx="63" cy="64" r="4" fill="#0b2c48"/><path d="M44 76 Q54 85 64 76" stroke="#0b2c48" stroke-width="4" fill="none" stroke-linecap="round"/><ellipse cx="38" cy="72" rx="4" ry="2.5" fill="#ffb3c1"/><ellipse cx="70" cy="72" rx="4" ry="2.5" fill="#ffb3c1"/></g></svg>
+      <svg width="40" height="40" viewBox="0 0 108 108"><path d="M54 16 C54 16 26 48 26 68 a28 28 0 0 0 56 0 C82 48 54 16 54 16Z" fill="#444"/><circle cx="45" cy="64" r="4" fill="#fff"/><circle cx="63" cy="64" r="4" fill="#fff"/><path d="M44 76 Q54 85 64 76" stroke="#fff" stroke-width="4" fill="none" stroke-linecap="round"/></svg>
+    </div>
+    <div class="name">2 · Drop Mate</div><small>The "Mate": a friendly drop character. Can react in-app (happy / thirsty / sleepy).</small>
+  </div>
+
+  <div class="logo">
+    <div class="tiles">
+      <svg width="72" height="72" viewBox="0 0 108 108"><clipPath id="c3"><circle cx="54" cy="54" r="54"/></clipPath><g clip-path="url(#c3)"><rect width="108" height="108" fill="#0e7c86"/><path d="M32 26 H76 L70 84 H38 Z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M35 54 Q45 48 54 54 T73 54 L70 84 H38 Z" fill="#9fe6ec"/><path d="M44 66 l7 7 l13 -14" stroke="#0e7c86" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></g></svg>
+      <svg width="72" height="72" viewBox="0 0 108 108"><rect width="108" height="108" rx="30" fill="#0e7c86"/><path d="M32 26 H76 L70 84 H38 Z" fill="none" stroke="#fff" stroke-width="5" stroke-linejoin="round"/><path d="M35 54 Q45 48 54 54 T73 54 L70 84 H38 Z" fill="#9fe6ec"/><path d="M44 66 l7 7 l13 -14" stroke="#0e7c86" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round"/></svg>
+      <svg width="40" height="40" viewBox="0 0 108 108"><path d="M32 26 H76 L70 84 H38 Z" fill="none" stroke="#444" stroke-width="6" stroke-linejoin="round"/><path d="M35 54 Q45 48 54 54 T73 54 L70 84 H38 Z" fill="#444"/></svg>
+    </div>
+    <div class="name">3 · Glass Check</div><small>Half-full glass with a check mark – "goal reached". Matches bento style C.</small>
+  </div>
+
+  <div class="logo">
+    <div class="tiles">
+      <svg width="72" height="72" viewBox="0 0 108 108"><clipPath id="c4"><circle cx="54" cy="54" r="54"/></clipPath><g clip-path="url(#c4)"><rect width="108" height="108" fill="#071a2c"/><text x="54" y="50" text-anchor="middle" font-size="26" font-weight="800" fill="#3fa7ff" font-family="Segoe UI, sans-serif">H8</text><text x="54" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="#fff" font-family="Segoe UI, sans-serif">M8</text><path d="M20 88 Q37 80 54 88 T88 88" stroke="#3fa7ff" stroke-width="4" fill="none"/></g></svg>
+      <svg width="72" height="72" viewBox="0 0 108 108"><rect width="108" height="108" rx="30" fill="#071a2c"/><text x="54" y="50" text-anchor="middle" font-size="26" font-weight="800" fill="#3fa7ff" font-family="Segoe UI, sans-serif">H8</text><text x="54" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="#fff" font-family="Segoe UI, sans-serif">M8</text><path d="M20 88 Q37 80 54 88 T88 88" stroke="#3fa7ff" stroke-width="4" fill="none"/></svg>
+      <svg width="40" height="40" viewBox="0 0 108 108"><text x="54" y="50" text-anchor="middle" font-size="26" font-weight="800" fill="#444" font-family="Segoe UI, sans-serif">H8</text><text x="54" y="78" text-anchor="middle" font-size="26" font-weight="800" fill="#444" font-family="Segoe UI, sans-serif">M8</text></svg>
+    </div>
+    <div class="name">4 · H8M8 Monogram</div><small>Wordmark stacked with a wave. Pairs with dark style B.</small>
+  </div>
+</div>
+
+<script>
+  // Fill the demo calendar with pseudo-random % values.
+  const cal = document.getElementById('cal');
+  'MTWTFSS'.split('').forEach(d => cal.insertAdjacentHTML('beforeend', `<div class="h">${d}</div>`));
+  for (let i = 0; i < 6; i++) cal.insertAdjacentHTML('beforeend', '<div></div>'); // Nov 2026 starts on Sunday
+  const pct = [100,110,100,104,72]; // 1st–5th Nov; future days stay grey
+  for (let day = 1; day <= 30; day++) {
+    const p = pct[day - 1];
+    let bg = '#f1f4f7', fg = '#9aa7b4', ring = '';
+    if (p !== undefined) {
+      if (p >= 100) { bg = '#2b6cb0'; fg = '#fff'; }
+      else if (p >= 50) { bg = '#9cc4ea'; fg = '#0f1d2a'; }
+      else { bg = '#e3edf6'; fg = '#0f1d2a'; }
+    }
+    if (day === 5) ring = 'box-shadow:0 0 0 2px #f6fbff,0 0 0 4px #0f1d2a;';
+    cal.insertAdjacentHTML('beforeend', `<div class="d" style="background:${bg};color:${fg};${ring}">${day}</div>`);
+  }
+</script>
+</body>
+</html>
