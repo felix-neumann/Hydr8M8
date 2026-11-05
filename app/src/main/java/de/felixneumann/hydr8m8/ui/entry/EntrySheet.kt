@@ -1,6 +1,5 @@
 package de.felixneumann.hydr8m8.ui.entry
 
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -9,54 +8,38 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
-import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableDoubleStateOf
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import de.felixneumann.hydr8m8.R
-import de.felixneumann.hydr8m8.domain.AlcoholMath
 import de.felixneumann.hydr8m8.domain.BuiltInPresets
 import de.felixneumann.hydr8m8.domain.DrinkIcon
 import de.felixneumann.hydr8m8.domain.DrinkKind
 import de.felixneumann.hydr8m8.domain.Entry
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.components.DatePickerDialogFor
-import de.felixneumann.hydr8m8.ui.components.DrinkIconView
+import de.felixneumann.hydr8m8.ui.components.DrinkForm
 import de.felixneumann.hydr8m8.ui.components.TimePickerDialog
-import de.felixneumann.hydr8m8.ui.theme.HydrTheme
+import de.felixneumann.hydr8m8.ui.components.rememberDrinkDraft
 import java.time.Instant
 import java.time.LocalDate
 import java.time.LocalTime
 import java.time.ZoneId
-import java.time.format.DateTimeFormatter
-import java.time.format.FormatStyle
-import kotlin.math.roundToInt
 
 /** Result of the entry sheet. */
 data class EntryDraft(
@@ -68,19 +51,9 @@ data class EntryDraft(
     val saveAsFavorite: Boolean,
 )
 
-private const val STEP_ML = 10
-private const val MIN_ML = 10
-private const val MAX_WATER_ML = 2000
-private const val MAX_ALCOHOL_ML = 1000
-private const val ABV_STEP = 0.5
-private const val MIN_ABV = 0.5
-private const val MAX_ABV = 70.0
-private const val DEFAULT_WATER_ML = 250
-private const val DEFAULT_ABV = 5.0
-
 /**
  * Bottom sheet to add a custom amount, back-date an entry ([initialDate]) or edit [editing].
- * Amount slider moves in 10 ml steps.
+ * The drink itself is edited with the shared [DrinkForm].
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -94,11 +67,14 @@ fun EntrySheet(
     onDelete: (() -> Unit)? = null,
 ) {
     val zone = ZoneId.systemDefault()
-    val sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
-    var kind by remember { mutableStateOf(editing?.kind ?: DrinkKind.WATER) }
-    var icon by remember { mutableStateOf(editing?.icon ?: DrinkIcon.MUG) }
-    var volume by remember { mutableIntStateOf(editing?.volumeMl ?: DEFAULT_WATER_ML) }
-    var abv by remember { mutableDoubleStateOf(editing?.abvPercent ?: DEFAULT_ABV) }
+    val defaultIcon = BuiltInPresets.defaultIcon(DrinkKind.WATER)
+    val drink =
+        rememberDrinkDraft(
+            kind = editing?.kind ?: DrinkKind.WATER,
+            icon = editing?.icon ?: defaultIcon,
+            volumeMl = editing?.volumeMl ?: BuiltInPresets.templateFor(defaultIcon)!!.volumeMl,
+            abvPercent = editing?.abvPercent,
+        )
     var date by remember { mutableStateOf(editing?.at?.atZone(zone)?.toLocalDate() ?: initialDate) }
     var time by remember {
         mutableStateOf(
@@ -109,119 +85,25 @@ fun EntrySheet(
     var favorite by remember { mutableStateOf(false) }
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
-    val colors = HydrTheme.colors
-    val maxMl = if (kind == DrinkKind.ALCOHOL) MAX_ALCOHOL_ML else MAX_WATER_ML
 
-    // Picking an icon pre-fills the typical amount (and ABV) of that vessel.
-    fun applyTemplate(option: DrinkIcon) {
-        BuiltInPresets.all.firstOrNull { it.icon == option }?.let { t ->
-            volume = t.volumeMl
-            t.abvPercent?.let { abv = it }
-        }
-    }
-
-    ModalBottomSheet(onDismissRequest = onDismiss, sheetState = sheetState, modifier = modifier) {
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        modifier = modifier,
+    ) {
         Column(
             Modifier
                 .padding(horizontal = 20.dp)
                 .navigationBarsPadding(),
         ) {
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                DrinkKind.entries.forEach { k ->
-                    FilterChip(
-                        selected = kind == k,
-                        onClick = {
-                            if (kind != k) {
-                                kind = k
-                                val defaultIcon = if (k == DrinkKind.ALCOHOL) DrinkIcon.BEER else DrinkIcon.GLASS
-                                icon = defaultIcon
-                                applyTemplate(defaultIcon)
-                            }
-                        },
-                        label = {
-                            Text(
-                                stringResource(
-                                    if (k ==
-                                        DrinkKind.WATER
-                                    ) {
-                                        R.string.kind_water
-                                    } else {
-                                        R.string.kind_alcohol
-                                    },
-                                ),
-                            )
-                        },
-                    )
-                }
-            }
-            Spacer(Modifier.height(12.dp))
-            LazyRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                items(DrinkIcon.forKind(kind)) { option ->
-                    Surface(
-                        onClick = {
-                            icon = option
-                            applyTemplate(option)
-                        },
-                        shape = RoundedCornerShape(12.dp),
-                        color = if (icon == option) MaterialTheme.colorScheme.primaryContainer else Color.Transparent,
-                        border = BorderStroke(1.dp, MaterialTheme.colorScheme.outline.copy(alpha = 0.5f)),
-                    ) {
-                        DrinkIconView(option, size = 30.dp, modifier = Modifier.padding(8.dp))
-                    }
-                }
-            }
-
-            Text(
-                Format.volume(volume),
-                fontSize = 40.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.align(Alignment.CenterHorizontally).padding(top = 18.dp),
-            )
-            Slider(
-                value = volume.toFloat(),
-                onValueChange = { volume = ((it / STEP_ML).roundToInt() * STEP_ML).coerceIn(MIN_ML, maxMl) },
-                valueRange = MIN_ML.toFloat()..maxMl.toFloat(),
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(8.dp), modifier = Modifier.fillMaxWidth()) {
-                listOf(-STEP_ML * 5, -STEP_ML, STEP_ML, STEP_ML * 5).forEach { delta ->
-                    OutlinedButton(
-                        onClick = { volume = (volume + delta).coerceIn(MIN_ML, maxMl) },
-                        modifier = Modifier.weight(1f),
-                    ) { Text((if (delta > 0) "+" else "−") + kotlin.math.abs(delta)) }
-                }
-            }
-
-            if (kind == DrinkKind.ALCOHOL) {
-                Spacer(Modifier.height(12.dp))
-                Text(
-                    stringResource(R.string.abv_label, Format.abv(abv)) + " · " +
-                        stringResource(R.string.goal_bonus, Format.volume(AlcoholMath.goalBonusMl(volume, abv))),
-                    color = colors.alcohol,
-                )
-                Slider(
-                    value = abv.toFloat(),
-                    onValueChange = { abv = ((it / ABV_STEP).roundToInt() * ABV_STEP).coerceIn(MIN_ABV, MAX_ABV) },
-                    valueRange = MIN_ABV.toFloat()..MAX_ABV.toFloat(),
-                )
-            }
+            DrinkForm(drink, showStepButtons = true)
 
             Spacer(Modifier.height(8.dp))
             Row(horizontalArrangement = Arrangement.spacedBy(8.dp), verticalAlignment = Alignment.CenterVertically) {
                 TextButton(onClick = { showDate = true }) {
-                    Text(
-                        "📅 " +
-                            if (date ==
-                                today
-                            ) {
-                                stringResource(R.string.today)
-                            } else {
-                                date.format(DateTimeFormatter.ofLocalizedDate(FormatStyle.MEDIUM))
-                            },
-                    )
+                    Text("📅 " + if (date == today) stringResource(R.string.today) else Format.date(date))
                 }
-                TextButton(onClick = { showTime = true }) {
-                    Text("🕘 " + time.format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT)))
-                }
+                TextButton(onClick = { showTime = true }) { Text("🕘 " + Format.time(time)) }
             }
             if (editing == null) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
@@ -235,10 +117,10 @@ fun EntrySheet(
                 onClick = {
                     onSave(
                         EntryDraft(
-                            kind = kind,
-                            volumeMl = volume,
-                            abvPercent = if (kind == DrinkKind.ALCOHOL) abv else null,
-                            icon = icon,
+                            kind = drink.kind,
+                            volumeMl = drink.volumeMl,
+                            abvPercent = drink.storedAbv,
+                            icon = drink.icon,
                             at = date.atTime(time).atZone(zone).toInstant(),
                             saveAsFavorite = favorite,
                         ),
@@ -246,23 +128,20 @@ fun EntrySheet(
                 },
                 modifier = Modifier.fillMaxWidth().height(52.dp),
             ) {
-                Text(
-                    if (editing ==
-                        null
-                    ) {
-                        stringResource(R.string.add_volume, Format.volume(volume))
+                val label =
+                    if (editing == null) {
+                        stringResource(R.string.add_volume, Format.volume(drink.volumeMl))
                     } else {
                         stringResource(R.string.save)
-                    },
-                    fontWeight = FontWeight.Bold,
-                )
+                    }
+                Text(label, fontWeight = FontWeight.Bold)
             }
             if (onDelete != null) {
                 TextButton(onClick = onDelete, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(R.string.delete_entry), color = MaterialTheme.colorScheme.error)
                 }
             }
-            Spacer(Modifier.size(16.dp))
+            Spacer(Modifier.height(16.dp))
         }
     }
 

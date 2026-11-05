@@ -1,6 +1,6 @@
 # Hydr8M8
 
-*HydrateMate* – a small Android app for tracking daily water intake, built for two people on Galaxy S24 phones. Not on the Play Store; releases are signed APKs attached to GitHub Releases.
+*HydrateMate* – a small Android app for tracking daily water intake, built for two people on Galaxy S24 phones. Not on the Play Store; releases are signed APKs attached to GitHub Releases, and the app can update itself from there.
 
 ## Features
 
@@ -14,11 +14,13 @@
 - **Live progress** in the notification shade / Now Bar (Android 16+)
 - **Home-screen widget** (resizable, configurable per instance) and **launcher shortcuts** (long-press the app icon)
 - **Drop Mate** mascot whose mood follows your pace; subtle sound effects
-- English and German UI, light and dark theme, Android Auto Backup
+- English and German UI and light/dark theme, each following the system or overridden in the settings
+- **In-app updates**: checks GitHub Releases on start (switchable) or on demand, downloads with a progress bar and installs
+- Android Auto Backup
 
 ## Install
 
-Download the latest `Hydr8M8-<version>.apk` from [Releases](../../releases) and open it on the phone (allow installing from this source once). Updates install over the existing app as long as they are signed with the same key.
+Download the latest `Hydr8M8-<version>.apk` from [Releases](../../releases) and open it on the phone (allow installing from this source once). Later updates can be installed from within the app (Settings → Updates); Android asks once to allow Hydr8M8 to install apps.
 
 ## Development
 
@@ -27,3 +29,7 @@ See [CLAUDE.md](CLAUDE.md) for commands and architecture and [docs/SPEC.md](docs
 ```sh
 ./gradlew testDebugUnitTest spotlessCheck lintDebug assembleDebug
 ```
+
+## License
+
+[MIT](LICENSE)

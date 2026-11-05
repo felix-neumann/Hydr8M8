@@ -13,6 +13,8 @@ import de.felixneumann.hydr8m8.domain.History
 import de.felixneumann.hydr8m8.domain.Preset
 import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.sound.Sound
+import de.felixneumann.hydr8m8.update.ReleaseInfo
+import de.felixneumann.hydr8m8.update.UpdateState
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.SharedFlow
@@ -56,6 +58,9 @@ class MainViewModel(
             if (s.reminders.enabled) c.reminderScheduler.nextReminderAt(h) else null
         }.state(null)
 
+    val updateState: StateFlow<UpdateState> = c.updates.state
+    val updateDialogVisible: StateFlow<Boolean> = c.updates.dialogVisible
+
     private val _events = MutableSharedFlow<UiEvent>(extraBufferCapacity = 4)
     val events: SharedFlow<UiEvent> = _events
 
@@ -64,8 +69,15 @@ class MainViewModel(
             repo.ensureSeeded()
             c.weather.captureLocation()
             c.actions.refreshAll()
+            if (c.settings.current().autoUpdateCheck) c.updates.checkOnStart()
         }
     }
+
+    fun checkForUpdates() = c.updates.check(manual = true)
+
+    fun downloadUpdate(release: ReleaseInfo) = c.updates.downloadAndInstall(release)
+
+    fun dismissUpdate() = c.updates.dismiss()
 
     fun logPreset(preset: Preset) {
         viewModelScope.launch { c.actions.logPreset(preset.id)?.let(::onLogged) }

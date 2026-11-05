@@ -1,4 +1,4 @@
-package de.felixneumann.hydr8m8.ui.settings
+package de.felixneumann.hydr8m8.system
 
 import android.Manifest
 import android.content.Context
@@ -25,37 +25,6 @@ import androidx.compose.ui.unit.sp
 import androidx.core.net.toUri
 import de.felixneumann.hydr8m8.R
 import kotlin.math.roundToInt
-
-/** Dialog with a stepped slider for a numeric setting. */
-@Composable
-fun SliderDialog(
-    title: String,
-    initial: Int,
-    range: IntRange,
-    step: Int,
-    format: (Int) -> String,
-    onConfirm: (Int) -> Unit,
-    onDismiss: () -> Unit,
-) {
-    var value by remember { mutableFloatStateOf(initial.toFloat()) }
-    val snapped = ((value / step).roundToInt() * step).coerceIn(range.first, range.last)
-    AlertDialog(
-        onDismissRequest = onDismiss,
-        title = { Text(title) },
-        text = {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Text(format(snapped), fontSize = 28.sp, fontWeight = FontWeight.Bold)
-                Slider(
-                    value = value,
-                    onValueChange = { value = it },
-                    valueRange = range.first.toFloat()..range.last.toFloat(),
-                )
-            }
-        },
-        confirmButton = { TextButton(onClick = { onConfirm(snapped) }) { Text(stringResource(R.string.ok)) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
-    )
-}
 
 object Permissions {
     fun has(

@@ -136,7 +136,6 @@
     <string name="snooze_duration">Snooze duration</string>
     <string name="respect_dnd">Silent during Do Not Disturb</string>
     <string name="respect_dnd_hint">Skip reminders while Do Not Disturb or Bedtime mode is on.</string>
-    <string name="minutes_value">%1$d min</string>
     <string name="minutes_short">min</string>
     <string name="section_weather">Weather</string>
     <string name="weather_enabled">Raise goal on warm days</string>
@@ -159,7 +158,6 @@
     <string name="perm_battery_hint">Keeps Samsung from delaying reminders.</string>
     <string name="granted">Granted</string>
     <string name="grant">Grant</string>
-    <string name="about_version">Hydr8M8 %1$s</string>
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Hi, I\'m your Drop Mate!</string>
@@ -233,4 +231,27 @@
     <string name="theme_dark">Dark</string>
     <string name="language">Language</string>
     <string name="language_system">Like the system</string>
+
+    <!-- In-app updates -->
+    <string name="section_updates">Updates</string>
+    <string name="auto_update_check">Check for updates on start</string>
+    <string name="auto_update_check_hint">Shows a popup when a new version is available on GitHub.</string>
+    <string name="check_updates">Check for updates</string>
+    <string name="installed_version">Installed: %1$s</string>
+    <string name="update_checking">Checking for updates…</string>
+    <string name="update_up_to_date">You\'re up to date</string>
+    <string name="update_up_to_date_text">Version %1$s is the newest release.</string>
+    <string name="update_available_short">%1$s available</string>
+    <string name="update_available_title">Update available</string>
+    <string name="update_available_text">Version %1$s is available (installed: %2$s, download %3$s).</string>
+    <string name="update_install">Download &amp; install</string>
+    <string name="update_later">Later</string>
+    <string name="update_hide">Hide</string>
+    <string name="update_downloading">Downloading version %1$s</string>
+    <string name="update_progress">%1$s of %2$s · %3$d %%</string>
+    <string name="update_installing">Starting installation…</string>
+    <string name="update_failed">Update failed</string>
+    <string name="update_failed_short">Failed</string>
+    <string name="update_failed_unknown">Unknown error. Please try again.</string>
+    <string name="update_retry">Try again</string>
 </resources>

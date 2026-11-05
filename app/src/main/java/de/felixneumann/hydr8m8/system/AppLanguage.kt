@@ -1,4 +1,4 @@
-package de.felixneumann.hydr8m8.ui.settings
+package de.felixneumann.hydr8m8.system
 
 import android.app.LocaleManager
 import android.content.Context

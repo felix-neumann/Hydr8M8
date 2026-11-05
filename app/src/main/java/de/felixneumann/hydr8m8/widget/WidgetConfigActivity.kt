@@ -37,7 +37,6 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import de.felixneumann.hydr8m8.R
-import de.felixneumann.hydr8m8.applySystemBars
 import de.felixneumann.hydr8m8.container
 import de.felixneumann.hydr8m8.data.ThemeMode
 import de.felixneumann.hydr8m8.data.WidgetBackground
@@ -49,8 +48,8 @@ import de.felixneumann.hydr8m8.ui.components.SectionCard
 import de.felixneumann.hydr8m8.ui.components.SettingRow
 import de.felixneumann.hydr8m8.ui.components.SurfaceEditor
 import de.felixneumann.hydr8m8.ui.components.SwitchRow
-import de.felixneumann.hydr8m8.ui.theme.Hydr8M8Theme
 import de.felixneumann.hydr8m8.ui.theme.HydrTheme
+import de.felixneumann.hydr8m8.ui.theme.ThemedContent
 import de.felixneumann.hydr8m8.ui.theme.isDark
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
@@ -70,10 +69,7 @@ class WidgetConfigActivity : ComponentActivity() {
         // Placing the widget without saving still keeps it (configuration is optional).
         setResult(Activity.RESULT_OK, Intent().putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, widgetId))
         setContent {
-            val settings by container.settings.settings.collectAsStateWithLifecycle(initialValue = null)
-            val dark = (settings?.themeMode ?: ThemeMode.SYSTEM).isDark()
-            LaunchedEffect(dark) { applySystemBars(dark) }
-            Hydr8M8Theme(darkTheme = dark) {
+            ThemedContent {
                 ConfigScreen(widgetId, onDone = { finish() })
             }
         }

@@ -31,6 +31,7 @@ data class AppSettings(
     val liveUpdateEnabled: Boolean = true,
     val soundsEnabled: Boolean = true,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
+    val autoUpdateCheck: Boolean = true,
 ) {
     companion object {
         const val DEFAULT_GOAL_ML = 2000
@@ -75,6 +76,7 @@ class SettingsRepository(
         val LIVE_UPDATE = booleanPreferencesKey("live_update_enabled")
         val SOUNDS = booleanPreferencesKey("sounds_enabled")
         val THEME_MODE = stringPreferencesKey("theme_mode")
+        val AUTO_UPDATE = booleanPreferencesKey("auto_update_check")
         val LAST_REMINDER = longPreferencesKey("last_reminder_at")
         val SNOOZED_UNTIL = longPreferencesKey("snoozed_until")
         val LAST_MILESTONE = stringPreferencesKey("last_milestone_key")
@@ -120,6 +122,7 @@ class SettingsRepository(
             prefs[Keys.LIVE_UPDATE] = s.liveUpdateEnabled
             prefs[Keys.SOUNDS] = s.soundsEnabled
             prefs[Keys.THEME_MODE] = s.themeMode.name
+            prefs[Keys.AUTO_UPDATE] = s.autoUpdateCheck
         }
     }
 
@@ -181,6 +184,7 @@ class SettingsRepository(
                 ),
             liveUpdateEnabled = this[Keys.LIVE_UPDATE] ?: d.liveUpdateEnabled,
             soundsEnabled = this[Keys.SOUNDS] ?: d.soundsEnabled,
+            autoUpdateCheck = this[Keys.AUTO_UPDATE] ?: d.autoUpdateCheck,
             themeMode = this[Keys.THEME_MODE]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: d.themeMode,
         )
     }

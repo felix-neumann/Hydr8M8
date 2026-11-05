@@ -10,6 +10,9 @@ import de.felixneumann.hydr8m8.notifications.ProgressNotifier
 import de.felixneumann.hydr8m8.notifications.ReminderScheduler
 import de.felixneumann.hydr8m8.shortcuts.ShortcutPublisher
 import de.felixneumann.hydr8m8.sound.SoundPlayer
+import de.felixneumann.hydr8m8.update.GitHubReleases
+import de.felixneumann.hydr8m8.update.UpdateInstaller
+import de.felixneumann.hydr8m8.update.UpdateManager
 import de.felixneumann.hydr8m8.weather.WeatherService
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.SupervisorJob
@@ -30,6 +33,13 @@ class AppContainer(
     val shortcuts = ShortcutPublisher(appContext)
     val weather = WeatherService(appContext, repository, settings)
     val actions = HydrationActions(this)
+    val updates =
+        UpdateManager(
+            scope = appScope,
+            installedVersionName = BuildConfig.VERSION_NAME,
+            releases = GitHubReleases(BuildConfig.GITHUB_REPO),
+            installer = UpdateInstaller(appContext),
+        )
 }
 
 class Hydr8M8App : Application() {

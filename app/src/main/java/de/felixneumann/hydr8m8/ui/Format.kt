@@ -9,6 +9,8 @@ import de.felixneumann.hydr8m8.domain.MateMood
 import de.felixneumann.hydr8m8.domain.Preset
 import java.text.NumberFormat
 import java.time.Instant
+import java.time.LocalDate
+import java.time.LocalTime
 import java.time.ZoneId
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -34,6 +36,11 @@ object Format {
 
     fun litres(ml: Int): String = litres(ml.toLong())
 
+    /** File size in megabytes with one decimal, e.g. "4.5 MB". */
+    fun megabytes(bytes: Long): String = number(bytes / BYTES_PER_MB, minDecimals = 1, maxDecimals = 1) + " MB"
+
+    private const val BYTES_PER_MB = 1_048_576.0
+
     fun abv(percent: Double): String = number(percent, maxDecimals = 1) + " %"
 
     fun number(
@@ -46,8 +53,15 @@ object Format {
             maximumFractionDigits = maxDecimals
         }.format(value)
 
-    fun time(instant: Instant): String =
-        DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(instant.atZone(ZoneId.systemDefault()))
+    fun time(instant: Instant): String = time(instant.atZone(ZoneId.systemDefault()).toLocalTime())
+
+    /** Short localized time, following the locale's 12/24 h convention. */
+    fun time(time: LocalTime): String = DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT).format(time)
+
+    fun date(
+        date: LocalDate,
+        style: FormatStyle = FormatStyle.MEDIUM,
+    ): String = DateTimeFormatter.ofLocalizedDate(style).format(date)
 
     /** Short label of a preset: amount, plus ABV for alcohol. */
     fun presetLabel(preset: Preset): String =
@@ -57,6 +71,9 @@ object Format {
             volume(preset.volumeMl)
         }
 }
+
+@StringRes
+fun DrinkKind.label(): Int = if (this == DrinkKind.ALCOHOL) R.string.kind_alcohol else R.string.kind_water
 
 @DrawableRes
 fun DrinkIcon.drawable(): Int =

@@ -1,6 +1,7 @@
 package de.felixneumann.hydr8m8.domain
 
 import java.time.Instant
+import kotlin.math.roundToInt
 
 enum class DrinkKind { WATER, ALCOHOL }
 
@@ -88,11 +89,36 @@ object BuiltInPresets {
             PresetTemplate("shot", DrinkIcon.SHOT, 20, 40.0),
         )
 
+    fun templateFor(icon: DrinkIcon): PresetTemplate? = all.firstOrNull { it.icon == icon }
+
+    /** Icon a fresh entry of [kind] starts with. */
+    fun defaultIcon(kind: DrinkKind): DrinkIcon = if (kind == DrinkKind.ALCOHOL) DrinkIcon.BEER else DrinkIcon.MUG
+
     /** Default per-surface selections (by template key). */
     val defaultHome = listOf("water_200", "water_250", "water_330", "water_500")
     val defaultShortcuts = listOf("water_200", "water_330", "water_500")
     val defaultNotification = listOf("water_200", "water_500")
     val defaultWidget = listOf("water_200", "water_250", "water_500")
+}
+
+/** Input limits and snapping for amounts and alcohol content (10 ml / 0.5 % steps). */
+object DrinkLimits {
+    const val STEP_ML = 10
+    const val MIN_ML = STEP_ML
+    private const val MAX_WATER_ML = 2000
+    private const val MAX_ALCOHOL_ML = 1000
+    const val ABV_STEP = 0.5
+    const val MIN_ABV = 0.5
+    const val MAX_ABV = 70.0
+
+    fun maxMl(kind: DrinkKind): Int = if (kind == DrinkKind.ALCOHOL) MAX_ALCOHOL_ML else MAX_WATER_ML
+
+    fun snapVolume(
+        ml: Float,
+        kind: DrinkKind,
+    ): Int = ((ml / STEP_ML).roundToInt() * STEP_ML).coerceIn(MIN_ML, maxMl(kind))
+
+    fun snapAbv(percent: Double): Double = ((percent / ABV_STEP).roundToInt() * ABV_STEP).coerceIn(MIN_ABV, MAX_ABV)
 }
 
 /** Where a preset selection is shown. Widgets use one key per widget instance. */

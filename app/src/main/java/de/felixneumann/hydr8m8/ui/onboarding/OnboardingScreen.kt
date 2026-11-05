@@ -44,12 +44,12 @@ import de.felixneumann.hydr8m8.domain.WakeSchedule
 import de.felixneumann.hydr8m8.domain.WakeWindow
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.components.MateView
+import de.felixneumann.hydr8m8.ui.components.PermissionRows
 import de.felixneumann.hydr8m8.ui.components.SectionCard
 import de.felixneumann.hydr8m8.ui.components.SettingRow
 import de.felixneumann.hydr8m8.ui.components.SurfaceEditor
 import de.felixneumann.hydr8m8.ui.components.TimePickerDialog
-import de.felixneumann.hydr8m8.ui.settings.Permissions
-import de.felixneumann.hydr8m8.ui.settings.rememberPermissionRequest
+import de.felixneumann.hydr8m8.ui.components.WakeScheduleEditor
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
@@ -167,33 +167,7 @@ private fun ScheduleStep(
     onChange: (WakeSchedule) -> Unit,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     Title(stringResource(R.string.onboarding_sleep_title), stringResource(R.string.onboarding_sleep_text))
-    var editing by remember { mutableStateOf<Pair<Boolean, Boolean>?>(null) } // (weekend, sleep)
-
-    fun LocalTime.short() = format(DateTimeFormatter.ofLocalizedTime(FormatStyle.SHORT))
-    SectionCard {
-        listOf(false, true).forEach { weekend ->
-            val w = if (weekend) schedule.weekend else schedule.weekday
-            Text(
-                stringResource(if (weekend) R.string.weekend else R.string.weekdays),
-                fontSize = 12.sp,
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            SettingRow(stringResource(R.string.wake_up), w.wake.short(), { editing = weekend to false })
-            SettingRow(stringResource(R.string.bedtime), w.sleep.short(), { editing = weekend to true })
-        }
-    }
-    editing?.let { (weekend, sleep) ->
-        val w = if (weekend) schedule.weekend else schedule.weekday
-        TimePickerDialog(
-            initial = if (sleep) w.sleep else w.wake,
-            onConfirm = { t ->
-                val updated = if (sleep) WakeWindow(w.wake, t) else WakeWindow(t, w.sleep)
-                onChange(if (weekend) schedule.copy(weekend = updated) else schedule.copy(weekday = updated))
-                editing = null
-            },
-            onDismiss = { editing = null },
-        )
-    }
+    SectionCard { WakeScheduleEditor(schedule, onChange) }
 }
 
 @Composable
@@ -208,40 +182,8 @@ private fun HomeStep(
 }
 
 @Composable
-private fun PermissionStep(onLocationGrant: () -> Unit) {
-    val context = LocalContext.current
-    var tick by remember { mutableIntStateOf(0) }
-    LifecycleEventEffect(Lifecycle.Event.ON_RESUME) { tick++ }
-    val notif = remember(tick) { Permissions.notificationsGranted(context) }
-    val location = remember(tick) { Permissions.locationGranted(context) }
-    val battery = remember(tick) { Permissions.batteryUnrestricted(context) }
-    val notifLauncher = rememberPermissionRequest { tick++ }
-    val locationLauncher =
-        rememberPermissionRequest {
-            tick++
-            if (it) onLocationGrant()
-        }
+private fun PermissionStep(onLocationGrant: () -> Unit) =
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Title(stringResource(R.string.onboarding_perm_title), stringResource(R.string.onboarding_perm_text))
-        SectionCard {
-            SettingRow(
-                stringResource(R.string.perm_notifications),
-                stringResource(if (notif) R.string.granted else R.string.grant),
-                { if (!notif) notifLauncher.launch(Manifest.permission.POST_NOTIFICATIONS) },
-                supporting = stringResource(R.string.perm_notifications_hint),
-            )
-            SettingRow(
-                stringResource(R.string.perm_location),
-                stringResource(if (location) R.string.granted else R.string.grant),
-                { if (!location) locationLauncher.launch(Manifest.permission.ACCESS_COARSE_LOCATION) },
-                supporting = stringResource(R.string.perm_location_hint),
-            )
-            SettingRow(
-                stringResource(R.string.perm_battery),
-                stringResource(if (battery) R.string.granted else R.string.grant),
-                { if (!battery) Permissions.requestBatteryExemption(context) },
-                supporting = stringResource(R.string.perm_battery_hint),
-            )
-        }
+        SectionCard { PermissionRows(onLocationGrant) }
     }
-}

@@ -77,15 +77,7 @@ fun PresetLibraryScreen(
         DrinkKind.entries.forEach { kind ->
             SectionCard(
                 title =
-                    stringResource(
-                        if (kind ==
-                            DrinkKind.WATER
-                        ) {
-                            R.string.kind_water
-                        } else {
-                            R.string.kind_alcohol
-                        },
-                    ),
+                    stringResource(kind.label()),
             ) {
                 presets.filter { it.kind == kind }.forEach { preset ->
                     Row(

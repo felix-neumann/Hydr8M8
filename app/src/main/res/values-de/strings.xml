@@ -134,7 +134,6 @@
     <string name="snooze_duration">Später erinnern nach</string>
     <string name="respect_dnd">Still bei „Bitte nicht stören“</string>
     <string name="respect_dnd_hint">Keine Erinnerungen, solange „Bitte nicht stören“ oder der Schlafenszeitmodus aktiv ist.</string>
-    <string name="minutes_value">%1$d Min.</string>
     <string name="minutes_short">Min.</string>
     <string name="section_weather">Wetter</string>
     <string name="weather_enabled">Ziel an warmen Tagen erhöhen</string>
@@ -157,7 +156,6 @@
     <string name="perm_battery_hint">Verhindert, dass Samsung Erinnerungen verzögert.</string>
     <string name="granted">Erteilt</string>
     <string name="grant">Erteilen</string>
-    <string name="about_version">Hydr8M8 %1$s</string>
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Hi, ich bin dein Drop Mate!</string>
@@ -231,4 +229,27 @@
     <string name="theme_dark">Dunkel</string>
     <string name="language">Sprache</string>
     <string name="language_system">Wie das System</string>
+
+    <!-- In-app updates -->
+    <string name="section_updates">Updates</string>
+    <string name="auto_update_check">Beim Start nach Updates suchen</string>
+    <string name="auto_update_check_hint">Zeigt ein Popup, wenn auf GitHub eine neue Version verfügbar ist.</string>
+    <string name="check_updates">Nach Updates suchen</string>
+    <string name="installed_version">Installiert: %1$s</string>
+    <string name="update_checking">Suche nach Updates…</string>
+    <string name="update_up_to_date">Alles aktuell</string>
+    <string name="update_up_to_date_text">Version %1$s ist die neueste Version.</string>
+    <string name="update_available_short">%1$s verfügbar</string>
+    <string name="update_available_title">Update verfügbar</string>
+    <string name="update_available_text">Version %1$s ist verfügbar (installiert: %2$s, Download %3$s).</string>
+    <string name="update_install">Herunterladen &amp; installieren</string>
+    <string name="update_later">Später</string>
+    <string name="update_hide">Ausblenden</string>
+    <string name="update_downloading">Lade Version %1$s herunter</string>
+    <string name="update_progress">%1$s von %2$s · %3$d %%</string>
+    <string name="update_installing">Installation wird gestartet…</string>
+    <string name="update_failed">Update fehlgeschlagen</string>
+    <string name="update_failed_short">Fehler</string>
+    <string name="update_failed_unknown">Unbekannter Fehler. Bitte erneut versuchen.</string>
+    <string name="update_retry">Erneut versuchen</string>
 </resources>
