@@ -34,6 +34,7 @@ import de.felixneumann.hydr8m8.domain.Entry
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.components.DatePickerDialogFor
 import de.felixneumann.hydr8m8.ui.components.DrinkForm
+import de.felixneumann.hydr8m8.ui.components.PresetNameField
 import de.felixneumann.hydr8m8.ui.components.TimePickerDialog
 import de.felixneumann.hydr8m8.ui.components.rememberDrinkDraft
 import java.time.Instant
@@ -49,6 +50,8 @@ data class EntryDraft(
     val icon: DrinkIcon,
     val at: Instant,
     val saveAsFavorite: Boolean,
+    /** Name for the new favorite, if any. */
+    val favoriteName: String? = null,
 )
 
 /**
@@ -83,6 +86,7 @@ fun EntrySheet(
         )
     }
     var favorite by remember { mutableStateOf(false) }
+    var favoriteName by remember { mutableStateOf("") }
     var showDate by remember { mutableStateOf(false) }
     var showTime by remember { mutableStateOf(false) }
 
@@ -110,6 +114,7 @@ fun EntrySheet(
                     Checkbox(checked = favorite, onCheckedChange = { favorite = it })
                     Text(stringResource(R.string.save_as_favorite))
                 }
+                if (favorite) PresetNameField(favoriteName, { favoriteName = it })
             }
 
             Spacer(Modifier.height(8.dp))
@@ -123,6 +128,7 @@ fun EntrySheet(
                             icon = drink.icon,
                             at = date.atTime(time).atZone(zone).toInstant(),
                             saveAsFavorite = favorite,
+                            favoriteName = favoriteName.trim().ifBlank { null },
                         ),
                     )
                 },

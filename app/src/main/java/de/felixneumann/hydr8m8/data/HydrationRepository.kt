@@ -278,6 +278,7 @@ private fun PresetEntity.toDomain() =
         builtInKey = builtInKey,
         hidden = hidden,
         sortOrder = sortOrder,
+        name = name,
     )
 
 private fun Preset.toEntity() =
@@ -290,6 +291,7 @@ private fun Preset.toEntity() =
         builtInKey = builtInKey,
         hidden = hidden,
         sortOrder = sortOrder,
+        name = name?.trim()?.take(Preset.MAX_NAME_LENGTH)?.ifBlank { null },
     )
 
 private fun EntryEntity.toDomain() =

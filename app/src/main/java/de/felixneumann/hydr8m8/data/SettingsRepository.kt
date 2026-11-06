@@ -10,8 +10,11 @@ import androidx.datastore.preferences.core.intPreferencesKey
 import androidx.datastore.preferences.core.longPreferencesKey
 import androidx.datastore.preferences.core.stringPreferencesKey
 import androidx.datastore.preferences.preferencesDataStore
+import de.felixneumann.hydr8m8.domain.BodyBuild
+import de.felixneumann.hydr8m8.domain.BodyProfile
 import de.felixneumann.hydr8m8.domain.DayClock
 import de.felixneumann.hydr8m8.domain.ReminderSettings
+import de.felixneumann.hydr8m8.domain.Sex
 import de.felixneumann.hydr8m8.domain.WakeSchedule
 import de.felixneumann.hydr8m8.domain.WakeWindow
 import de.felixneumann.hydr8m8.domain.WeatherRules
@@ -32,6 +35,10 @@ data class AppSettings(
     val soundsEnabled: Boolean = true,
     val themeMode: ThemeMode = ThemeMode.SYSTEM,
     val autoUpdateCheck: Boolean = true,
+    /** Show the progress Live Update on the lock screen (otherwise only after unlocking). */
+    val progressOnLockScreen: Boolean = true,
+    /** Body data for the goal calculator; null if the goal was set manually. Stored only locally. */
+    val bodyProfile: BodyProfile? = null,
 ) {
     companion object {
         const val DEFAULT_GOAL_ML = 2000
@@ -77,6 +84,12 @@ class SettingsRepository(
         val SOUNDS = booleanPreferencesKey("sounds_enabled")
         val THEME_MODE = stringPreferencesKey("theme_mode")
         val AUTO_UPDATE = booleanPreferencesKey("auto_update_check")
+        val PROGRESS_LOCK_SCREEN = booleanPreferencesKey("progress_on_lock_screen")
+        val PROFILE_SEX = stringPreferencesKey("profile_sex")
+        val PROFILE_AGE = intPreferencesKey("profile_age")
+        val PROFILE_HEIGHT = intPreferencesKey("profile_height_cm")
+        val PROFILE_WEIGHT = intPreferencesKey("profile_weight_kg")
+        val PROFILE_BUILD = stringPreferencesKey("profile_build")
         val LAST_REMINDER = longPreferencesKey("last_reminder_at")
         val SNOOZED_UNTIL = longPreferencesKey("snoozed_until")
         val LAST_MILESTONE = stringPreferencesKey("last_milestone_key")
@@ -123,6 +136,19 @@ class SettingsRepository(
             prefs[Keys.SOUNDS] = s.soundsEnabled
             prefs[Keys.THEME_MODE] = s.themeMode.name
             prefs[Keys.AUTO_UPDATE] = s.autoUpdateCheck
+            prefs[Keys.PROGRESS_LOCK_SCREEN] = s.progressOnLockScreen
+            val profile = s.bodyProfile
+            if (profile == null) {
+                listOf(Keys.PROFILE_AGE, Keys.PROFILE_HEIGHT, Keys.PROFILE_WEIGHT).forEach { prefs.remove(it) }
+                prefs.remove(Keys.PROFILE_SEX)
+                prefs.remove(Keys.PROFILE_BUILD)
+            } else {
+                prefs[Keys.PROFILE_SEX] = profile.sex.name
+                prefs[Keys.PROFILE_AGE] = profile.ageYears
+                prefs[Keys.PROFILE_HEIGHT] = profile.heightCm
+                prefs[Keys.PROFILE_WEIGHT] = profile.weightKg
+                prefs[Keys.PROFILE_BUILD] = profile.build.name
+            }
         }
     }
 
@@ -138,6 +164,15 @@ class SettingsRepository(
 
     suspend fun setLastMilestoneKey(key: String) {
         context.dataStore.edit { it[Keys.LAST_MILESTONE] = key }
+    }
+
+    private fun Preferences.readProfile(): BodyProfile? {
+        val sex = this[Keys.PROFILE_SEX]?.let { runCatching { Sex.valueOf(it) }.getOrNull() } ?: return null
+        val build = this[Keys.PROFILE_BUILD]?.let { runCatching { BodyBuild.valueOf(it) }.getOrNull() } ?: return null
+        val age = this[Keys.PROFILE_AGE] ?: return null
+        val height = this[Keys.PROFILE_HEIGHT] ?: return null
+        val weight = this[Keys.PROFILE_WEIGHT] ?: return null
+        return BodyProfile(sex, age, height, weight, build)
     }
 
     private fun Preferences.toSettings(): AppSettings {
@@ -185,6 +220,8 @@ class SettingsRepository(
             liveUpdateEnabled = this[Keys.LIVE_UPDATE] ?: d.liveUpdateEnabled,
             soundsEnabled = this[Keys.SOUNDS] ?: d.soundsEnabled,
             autoUpdateCheck = this[Keys.AUTO_UPDATE] ?: d.autoUpdateCheck,
+            progressOnLockScreen = this[Keys.PROGRESS_LOCK_SCREEN] ?: d.progressOnLockScreen,
+            bodyProfile = readProfile(),
             themeMode = this[Keys.THEME_MODE]?.let { runCatching { ThemeMode.valueOf(it) }.getOrNull() } ?: d.themeMode,
         )
     }

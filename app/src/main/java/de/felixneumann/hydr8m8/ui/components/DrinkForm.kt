@@ -11,9 +11,11 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,6 +32,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardCapitalization
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
@@ -40,6 +43,7 @@ import de.felixneumann.hydr8m8.domain.BuiltInPresets
 import de.felixneumann.hydr8m8.domain.DrinkIcon
 import de.felixneumann.hydr8m8.domain.DrinkKind
 import de.felixneumann.hydr8m8.domain.DrinkLimits
+import de.felixneumann.hydr8m8.domain.Preset
 import de.felixneumann.hydr8m8.ui.Format
 import de.felixneumann.hydr8m8.ui.label
 import de.felixneumann.hydr8m8.ui.theme.HydrTheme
@@ -206,4 +210,22 @@ private fun VolumeStepButtons(onAdd: (Int) -> Unit) {
             }
         }
     }
+}
+
+/** Optional name for a saved amount ("My bottle"), limited to [Preset.MAX_NAME_LENGTH] characters. */
+@Composable
+fun PresetNameField(
+    value: String,
+    onChange: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = { onChange(it.take(Preset.MAX_NAME_LENGTH)) },
+        label = { Text(stringResource(R.string.preset_name_label)) },
+        placeholder = { Text(stringResource(R.string.preset_name_placeholder)) },
+        singleLine = true,
+        keyboardOptions = KeyboardOptions(capitalization = KeyboardCapitalization.Sentences),
+        modifier = modifier.fillMaxWidth(),
+    )
 }

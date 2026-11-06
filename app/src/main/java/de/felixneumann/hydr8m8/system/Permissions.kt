@@ -39,7 +39,7 @@ object Permissions {
     fun batteryUnrestricted(context: Context): Boolean =
         context.getSystemService(PowerManager::class.java).isIgnoringBatteryOptimizations(context.packageName)
 
-    /** Opens the system dialog to exempt the app from battery optimisation (needed on Samsung). */
+    /** Opens the system dialog to exempt the app from battery optimisation (some devices delay alarms otherwise). */
     @android.annotation.SuppressLint("BatteryLife") // Sideloaded app; reminders must not be deferred.
     fun requestBatteryExemption(context: Context) {
         context.startActivity(

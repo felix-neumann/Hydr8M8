@@ -1,6 +1,8 @@
 package de.felixneumann.hydr8m8.data.db
 
 import android.content.Context
+import androidx.room.AutoMigration
+import androidx.room.ColumnInfo
 import androidx.room.Dao
 import androidx.room.Database
 import androidx.room.Entity
@@ -36,6 +38,7 @@ data class PresetEntity(
     val builtInKey: String?,
     val hidden: Boolean,
     val sortOrder: Int,
+    @ColumnInfo(defaultValue = "NULL") val name: String? = null,
 )
 
 /** Ordered preset selection for one surface (home, shortcuts, notification, widget:<id>). */
@@ -199,8 +202,9 @@ interface WidgetConfigDao {
         WeatherEntity::class,
         WidgetConfigEntity::class,
     ],
-    version = 1,
+    version = 2,
     exportSchema = true,
+    autoMigrations = [AutoMigration(from = 1, to = 2)],
 )
 abstract class AppDatabase : RoomDatabase() {
     abstract fun entries(): EntryDao

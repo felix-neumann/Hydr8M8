@@ -41,8 +41,14 @@ data class Preset(
     val builtInKey: String?,
     val hidden: Boolean,
     val sortOrder: Int,
+    /** Optional user-given name, e.g. "My bottle". */
+    val name: String? = null,
 ) {
     val isBuiltIn: Boolean get() = builtInKey != null
+
+    companion object {
+        const val MAX_NAME_LENGTH = 24
+    }
 }
 
 data class Entry(

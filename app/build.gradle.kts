@@ -23,8 +23,8 @@ android {
         applicationId = "de.felixneumann.hydr8m8"
         minSdk = 34
         targetSdk = 37
-        versionCode = 5
-        versionName = "0.11.0"
+        versionCode = 6
+        versionName = "0.12.0"
         buildConfigField("String", "GITHUB_REPO", "\"felix-neumann/Hydr8M8\"")
     }
 

@@ -104,9 +104,7 @@ fun AppRoot(vm: MainViewModel) {
         OnboardingScreen(
             initialHomePresets = homePresets,
             library = presets,
-            onFinish = { goal, schedule, homeIds ->
-                vm.completeOnboarding(goal, { it.copy(schedule = schedule) }, homeIds)
-            },
+            onFinish = vm::completeOnboarding,
             onLocationGrant = vm::onLocationPermissionGranted,
             onCreatePreset = vm::createPreset,
         )
@@ -237,6 +235,7 @@ private fun MainScaffold(
                     updateState = updateState,
                     onUpdate = vm::updateSettings,
                     onSetGoal = vm::setBaseGoal,
+                    onApplyProfile = vm::applyCalculatedGoal,
                     onOpenPresets = { nav.navigate(Routes.PRESETS) },
                     onOpenSurface = { nav.navigate(Routes.surface(it)) },
                     onLocationGrant = vm::onLocationPermissionGranted,
@@ -268,7 +267,17 @@ private fun MainScaffold(
                     vm.log(draft.kind, draft.volumeMl, draft.abvPercent, draft.icon, draft.at)
                     if (draft.saveAsFavorite) {
                         vm.savePreset(
-                            Preset(0, draft.kind, draft.volumeMl, draft.abvPercent, draft.icon, null, false, 0),
+                            Preset(
+                                0,
+                                draft.kind,
+                                draft.volumeMl,
+                                draft.abvPercent,
+                                draft.icon,
+                                null,
+                                false,
+                                0,
+                                draft.favoriteName,
+                            ),
                             addToSurface = Surfaces.HOME,
                         )
                     }

@@ -134,7 +134,7 @@ private fun ConfigScreen(
             val tap = library.find { it.id == cfg.tapPresetId } ?: selected.firstOrNull()
             SettingRow(
                 stringResource(R.string.widget_tap_action),
-                tap?.let { "+" + Format.presetLabel(it) } ?: "–",
+                tap?.let { "+" + Format.presetDisplay(it) } ?: "–",
                 { showTapPicker = true },
                 supporting = stringResource(R.string.widget_tap_action_hint),
             )

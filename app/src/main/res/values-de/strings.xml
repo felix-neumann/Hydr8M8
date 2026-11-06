@@ -143,8 +143,8 @@
     <string name="hot_from">Heiß ab</string>
     <string name="hot_bonus">Extra an heißen Tagen</string>
     <string name="section_extras">Extras</string>
-    <string name="live_update">Fortschritt auf dem Sperrbildschirm</string>
-    <string name="live_update_hint">Live-Fortschritt (Now Bar), solange du wach bist.</string>
+    <string name="live_update">Fortschrittsanzeige</string>
+    <string name="live_update_hint">Live-Fortschritt in der Statusleiste und auf dem Sperrbildschirm, solange du wach bist.</string>
     <string name="sounds">Soundeffekte</string>
     <string name="sounds_hint">Dezente Sounds beim Eintragen, beim Erreichen des Ziels und für Streaks. Stumm im Lautlos-/Vibrationsmodus.</string>
     <string name="section_permissions">Berechtigungen</string>
@@ -153,14 +153,14 @@
     <string name="perm_location">Ungefährer Standort</string>
     <string name="perm_location_hint">Nur für den täglichen Wetter-Bonus.</string>
     <string name="perm_battery">Uneingeschränkte Akkunutzung</string>
-    <string name="perm_battery_hint">Verhindert, dass Samsung Erinnerungen verzögert.</string>
+    <string name="perm_battery_hint">Verhindert, dass das System Erinnerungen verzögert.</string>
     <string name="granted">Erteilt</string>
     <string name="grant">Erteilen</string>
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Hi, ich bin dein Drop Mate!</string>
-    <string name="onboarding_goal_text">Wie viel Wasser möchtest du pro Tag trinken?</string>
-    <string name="onboarding_goal_hint">Orientierung: Die EU-Lebensmittelbehörde EFSA empfiehlt etwa 1,6 l (Frauen) bis 2,0 l (Männer) aus Getränken pro Tag. Du kannst das jederzeit ändern.</string>
+    <string name="onboarding_goal_text">Wie viel Wasser möchtest du pro Tag trinken? Lass dir eine Empfehlung berechnen oder lege die Menge selbst fest.</string>
+    <string name="onboarding_goal_hint">Standard: 2,0 l. Orientierung: Die EU-Lebensmittelbehörde EFSA empfiehlt etwa 1,6 l (Frauen) bis 2,0 l (Männer) aus Getränken pro Tag. Du kannst das jederzeit ändern.</string>
     <string name="onboarding_sleep_title">Wann bist du wach?</string>
     <string name="onboarding_sleep_text">Erinnerungen kommen nur, während du wach bist.</string>
     <string name="onboarding_home_title">Deine Mengen</string>
@@ -252,11 +252,38 @@
     <string name="update_retry">Erneut versuchen</string>
     <string name="update_ready_short">Bereit zur Installation</string>
     <string name="update_ready_title">Version %1$s heruntergeladen</string>
-    <string name="update_ready_text">Die Datei wurde geprüft (von Hydr8M8 signiert, neuere Version). Tippe auf „Downloads öffnen“ und dann auf die Datei Hydr8M8-….apk – Android installiert das Update. Deine Daten bleiben erhalten.</string>
-    <string name="update_open_downloads">Downloads öffnen</string>
+    <string name="update_ready_text">Die Datei wurde geprüft (von Hydr8M8 signiert, neuere Version) und unter Dokumente › Hydr8M8 gespeichert. Tippe auf „Ordner öffnen“ und dann auf die Datei Hydr8M8-….apk – Android installiert das Update. Deine Daten bleiben erhalten.</string>
+    <string name="update_open_downloads">Ordner öffnen</string>
     <string name="update_error_network">GitHub ist nicht erreichbar. Prüfe deine Internetverbindung.</string>
     <string name="update_error_untrusted">Der Download stammt nicht aus dem offiziellen Hydr8M8-Repository und wurde blockiert.</string>
     <string name="update_error_download">Der Download ist fehlgeschlagen. Bitte erneut versuchen.</string>
     <string name="update_error_signature">Die heruntergeladene Datei ist nicht mit dem Hydr8M8-Schlüssel signiert. Sie wurde gelöscht und nicht installiert.</string>
     <string name="update_error_invalid">Die heruntergeladene Datei ist keine gültige, neuere Hydr8M8-Version. Sie wurde gelöscht.</string>
+    <string name="goal_mode_calculate">Berechnen</string>
+    <string name="goal_mode_manual">Selbst festlegen</string>
+    <string name="sex_female">Weiblich</string>
+    <string name="sex_male">Männlich</string>
+    <string name="sex_diverse">Divers</string>
+    <string name="profile_age" tools:ignore="PluralsCandidate">Alter: %1$d Jahre</string>
+    <string name="profile_height">Größe: %1$d cm</string>
+    <string name="profile_weight">Gewicht: %1$d kg</string>
+    <string name="profile_build">Statur</string>
+    <string name="build_slim">Schlank</string>
+    <string name="build_normal">Normal</string>
+    <string name="build_stocky">Kräftig</string>
+    <string name="profile_result">Empfehlung: %1$s pro Tag</string>
+    <string name="profile_explanation">Grundlage: DGE-Referenzwerte (ml pro kg Körpergewicht nach Alter) und EFSA (etwa 80 % des Wassers aus Getränken). Ab einem BMI von 30 wird ein angepasstes Gewicht aus Größe, Geschlecht und Statur verwendet. Deine Angaben bleiben auf diesem Gerät.</string>
+    <string name="calculate_goal">Tagesziel berechnen</string>
+    <string name="calculate_goal_hint">Aus Geschlecht, Alter, Größe, Gewicht und Statur.</string>
+    <string name="apply_goal">Als Ziel übernehmen</string>
+    <string name="onboarding_lock_title">Auf dem Sperrbildschirm anzeigen?</string>
+    <string name="onboarding_lock_text">Hydr8M8 kann deinen Tagesfortschritt als Live-Benachrichtigung anzeigen, solange du wach bist.</string>
+    <string name="lock_show">Ja, anzeigen</string>
+    <string name="lock_hide">Nein, erst nach dem Entsperren</string>
+    <string name="lock_show_hint">Auf dem Sperrbildschirm erscheint nur der Fortschritt, keine Details wie Stimmung oder Alkohol.</string>
+    <string name="lock_hide_hint">Nach dem Entsperren bleibt der Fortschritt in der Benachrichtigungsleiste sichtbar.</string>
+    <string name="progress_lock_screen">Fortschritt auf dem Sperrbildschirm</string>
+    <string name="progress_lock_screen_hint">Nur der Fortschritt, keine Details wie Stimmung oder Alkohol.</string>
+    <string name="preset_name_label">Name (optional)</string>
+    <string name="preset_name_placeholder">z. B. Meine Flasche</string>
 </resources>

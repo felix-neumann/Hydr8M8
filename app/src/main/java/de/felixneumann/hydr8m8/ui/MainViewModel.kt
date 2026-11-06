@@ -6,13 +6,16 @@ import androidx.lifecycle.viewModelScope
 import de.felixneumann.hydr8m8.LogResult
 import de.felixneumann.hydr8m8.container
 import de.felixneumann.hydr8m8.data.AppSettings
+import de.felixneumann.hydr8m8.domain.BodyProfile
 import de.felixneumann.hydr8m8.domain.DrinkIcon
 import de.felixneumann.hydr8m8.domain.DrinkKind
 import de.felixneumann.hydr8m8.domain.Entry
+import de.felixneumann.hydr8m8.domain.GoalCalculator
 import de.felixneumann.hydr8m8.domain.History
 import de.felixneumann.hydr8m8.domain.Preset
 import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.sound.Sound
+import de.felixneumann.hydr8m8.ui.onboarding.OnboardingResult
 import de.felixneumann.hydr8m8.update.ReleaseInfo
 import de.felixneumann.hydr8m8.update.UpdateState
 import kotlinx.coroutines.flow.Flow
@@ -183,15 +186,28 @@ class MainViewModel(
         }
     }
 
-    fun completeOnboarding(
-        goalMl: Int,
-        settingsTransform: (AppSettings) -> AppSettings,
-        homePresetIds: List<Long>,
-    ) {
+    fun completeOnboarding(result: OnboardingResult) {
         viewModelScope.launch {
-            repo.setBaseGoal(goalMl)
-            repo.setSurface(Surfaces.HOME, homePresetIds)
-            c.settings.update { settingsTransform(it).copy(onboardingDone = true, defaultGoalMl = goalMl) }
+            repo.setBaseGoal(result.goalMl)
+            repo.setSurface(Surfaces.HOME, result.homeIds)
+            c.settings.update {
+                it.copy(
+                    onboardingDone = true,
+                    defaultGoalMl = result.goalMl,
+                    schedule = result.schedule,
+                    bodyProfile = result.profile,
+                    progressOnLockScreen = result.progressOnLockScreen,
+                )
+            }
+            c.actions.refreshAll()
+        }
+    }
+
+    /** Sets the base goal from the calculator and remembers the profile for later recalculation. */
+    fun applyCalculatedGoal(profile: BodyProfile) {
+        viewModelScope.launch {
+            repo.setBaseGoal(GoalCalculator.recommendedMl(profile))
+            c.settings.update { it.copy(bodyProfile = profile) }
             c.actions.refreshAll()
         }
     }

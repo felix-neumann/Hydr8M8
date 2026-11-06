@@ -36,11 +36,11 @@ class ShortcutPublisher(
 
         val shortcuts =
             presets.mapIndexed { index, preset ->
-                val label = "+" + Format.presetLabel(preset)
+                val label = "+" + Format.presetTitle(preset)
                 ShortcutInfoCompat
                     .Builder(context, "preset_${preset.id}")
                     .setShortLabel(label)
-                    .setLongLabel(label)
+                    .setLongLabel("+" + Format.presetDisplay(preset))
                     .setRank(index)
                     .setIcon(iconBitmap(preset.icon.drawable(), BrandColors.forKind(preset.kind)))
                     .setIntent(ShortcutActivity.logIntent(context, preset.id))

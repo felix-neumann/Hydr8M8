@@ -40,7 +40,7 @@ sealed interface UpdateState {
             }
     }
 
-    /** Downloaded and verified; the system installer takes over from the Downloads app. */
+    /** Downloaded, verified and saved to Documents/Hydr8M8; the system installer takes over from the file manager. */
     data class ReadyToInstall(
         val release: ReleaseInfo,
     ) : UpdateState
@@ -128,7 +128,7 @@ class UpdateManager(
                         downloader.download(release) { done, total ->
                             _state.value = UpdateState.Downloading(release, done, total)
                         }
-                    }.getOrElse { DownloadOutcome.Failed(-1) }
+                    }.getOrElse { DownloadOutcome.Failed }
                 _state.value =
                     when (outcome) {
                         DownloadOutcome.Verified -> {
@@ -153,9 +153,9 @@ class UpdateManager(
             }
     }
 
-    /** Hands over to the system: the user taps the downloaded APK to install it. */
+    /** Hands over to the system: opens the folder where the user taps the APK to install it. */
     fun install() {
-        downloader.openDownloads()
+        downloader.openFolder()
         _dialogVisible.value = false
     }
 

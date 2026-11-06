@@ -108,7 +108,7 @@ object Notifications {
         actions.forEachIndexed { index, preset ->
             builder.addAction(
                 0,
-                "+" + Format.presetLabel(preset),
+                "+" + Format.presetTitle(preset),
                 NotificationActionReceiver.logIntent(context, preset.id, requestCode = index + 1),
             )
         }

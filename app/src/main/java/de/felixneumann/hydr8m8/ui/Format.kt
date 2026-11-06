@@ -63,6 +63,13 @@ object Format {
         style: FormatStyle = FormatStyle.MEDIUM,
     ): String = DateTimeFormatter.ofLocalizedDate(style).format(date)
 
+    /** Name if the user gave one, otherwise the amount label. For tight spaces (buttons, actions). */
+    fun presetTitle(preset: Preset): String = preset.name ?: presetLabel(preset)
+
+    /** Name and amount ("My bottle · 750 ml"), or just the amount for unnamed presets. */
+    fun presetDisplay(preset: Preset): String =
+        preset.name?.let { "$it · ${presetLabel(preset)}" } ?: presetLabel(preset)
+
     /** Short label of a preset: amount, plus ABV for alcohol. */
     fun presetLabel(preset: Preset): String =
         if (preset.kind == DrinkKind.ALCOHOL && preset.abvPercent != null) {

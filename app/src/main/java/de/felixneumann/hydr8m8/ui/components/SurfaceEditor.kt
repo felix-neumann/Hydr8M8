@@ -111,7 +111,7 @@ fun SurfaceEditor(
                 )
                 DrinkIconView(preset.icon)
                 Spacer(Modifier.width(10.dp))
-                Text(Format.presetLabel(preset), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface)
+                Text(Format.presetDisplay(preset), Modifier.weight(1f), color = MaterialTheme.colorScheme.onSurface)
                 IconButton(onClick = { onChange(currentSelected.filter { it.id != preset.id }.map { it.id }) }) {
                     Icon(Icons.Default.Close, contentDescription = stringResource(R.string.remove))
                 }
@@ -181,7 +181,7 @@ fun PresetPickerDialog(
                     ) {
                         DrinkIconView(preset.icon)
                         Spacer(Modifier.width(12.dp))
-                        Text(Format.presetLabel(preset))
+                        Text(Format.presetDisplay(preset))
                     }
                 }
             }

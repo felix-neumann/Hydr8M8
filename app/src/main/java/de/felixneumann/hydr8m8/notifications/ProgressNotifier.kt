@@ -19,8 +19,8 @@ import java.time.ZoneId
 
 /**
  * Ongoing progress notification during the wake window. On Android 16+ it requests promotion to a
- * Live Update (status chip / Samsung Now Bar). Once the goal is reached it turns into a short
- * celebration that times out.
+ * Live Update (status bar chip and, depending on the device, a lock-screen progress card). Once the
+ * goal is reached it turns into a short celebration that times out.
  */
 class ProgressNotifier(
     private val context: Context,
@@ -49,20 +49,24 @@ class ProgressNotifier(
 
         val mood = MateMood.of(now, window, today.waterMl, today.goalMl, today.hasAlcohol)
         val title = "${Format.litres(today.waterMl)} / ${Format.litres(today.goalMl)}"
-        // Privacy: the lock screen / Now Bar only gets a neutral version. The mood can reveal
-        // alcohol consumption ("Tipsy"), so it is shown only once the phone is unlocked.
-        val lockScreenVersion =
-            progressBuilder(title, "${today.percent} %", MateMood.HAPPY, today.waterMl, today.goalMl).build()
-        val notification =
+        val builder =
             progressBuilder(
                 title,
                 "${today.percent} % · ${context.getString(mood.label())}",
                 mood,
                 today.waterMl,
                 today.goalMl,
-            ).setVisibility(NotificationCompat.VISIBILITY_PRIVATE)
-                .setPublicVersion(lockScreenVersion)
-                .build()
+            )
+        if (settings.progressOnLockScreen) {
+            // Privacy: the lock screen only gets a neutral version. The mood can reveal alcohol
+            // consumption ("Tipsy"), so it is shown only once the phone is unlocked.
+            val lockScreenVersion =
+                progressBuilder(title, "${today.percent} %", MateMood.HAPPY, today.waterMl, today.goalMl).build()
+            builder.setVisibility(NotificationCompat.VISIBILITY_PRIVATE).setPublicVersion(lockScreenVersion)
+        } else {
+            builder.setVisibility(NotificationCompat.VISIBILITY_SECRET)
+        }
+        val notification = builder.build()
         nm.notify(Notifications.ID_PROGRESS, notification)
     }
 

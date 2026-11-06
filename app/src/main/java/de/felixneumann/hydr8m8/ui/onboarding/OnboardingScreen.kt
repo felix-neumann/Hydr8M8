@@ -37,12 +37,16 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LifecycleEventEffect
 import de.felixneumann.hydr8m8.R
 import de.felixneumann.hydr8m8.data.AppSettings
+import de.felixneumann.hydr8m8.domain.BodyProfile
+import de.felixneumann.hydr8m8.domain.GoalCalculator
 import de.felixneumann.hydr8m8.domain.MateMood
 import de.felixneumann.hydr8m8.domain.Preset
 import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.domain.WakeSchedule
 import de.felixneumann.hydr8m8.domain.WakeWindow
 import de.felixneumann.hydr8m8.ui.Format
+import de.felixneumann.hydr8m8.ui.components.BodyProfileForm
+import de.felixneumann.hydr8m8.ui.components.ChoiceChips
 import de.felixneumann.hydr8m8.ui.components.MateView
 import de.felixneumann.hydr8m8.ui.components.PermissionRows
 import de.felixneumann.hydr8m8.ui.components.SectionCard
@@ -55,23 +59,35 @@ import java.time.format.DateTimeFormatter
 import java.time.format.FormatStyle
 import kotlin.math.roundToInt
 
-private const val STEPS = 4
+private const val STEPS = 5
 private const val GOAL_STEP = 50
 private const val MIN_GOAL = 500
 private const val MAX_GOAL = 5000
 
-/** First-launch flow: goal, wake/sleep windows, home-screen amounts, permissions. */
+/** Everything the first-launch flow collects. [profile] is set when the goal was calculated. */
+data class OnboardingResult(
+    val goalMl: Int,
+    val profile: BodyProfile?,
+    val schedule: WakeSchedule,
+    val homeIds: List<Long>,
+    val progressOnLockScreen: Boolean,
+)
+
+/** First-launch flow: goal, wake/sleep windows, home-screen amounts, lock screen, permissions. */
 @Composable
 fun OnboardingScreen(
     initialHomePresets: List<Preset>,
     library: List<Preset>,
-    onFinish: (goalMl: Int, schedule: WakeSchedule, homeIds: List<Long>) -> Unit,
+    onFinish: (OnboardingResult) -> Unit,
     onLocationGrant: () -> Unit,
     onCreatePreset: (Preset, (Long) -> Unit) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var step by rememberSaveable { mutableIntStateOf(0) }
-    var goal by rememberSaveable { mutableIntStateOf(AppSettings.DEFAULT_GOAL_ML) }
+    var calculate by rememberSaveable { mutableStateOf(true) }
+    var manualGoal by rememberSaveable { mutableIntStateOf(AppSettings.DEFAULT_GOAL_ML) }
+    var profile by remember { mutableStateOf(BodyProfile.DEFAULT) }
+    var lockScreen by rememberSaveable { mutableStateOf(true) }
     var schedule by remember { mutableStateOf(WakeSchedule.DEFAULT) }
     var homeIds by remember(initialHomePresets) { mutableStateOf(initialHomePresets.map { it.id }) }
 
@@ -89,7 +105,14 @@ fun OnboardingScreen(
         Spacer(Modifier.height(12.dp))
         when (step) {
             0 -> {
-                GoalStep(goal) { goal = it }
+                GoalStep(
+                    calculate = calculate,
+                    onCalculate = { calculate = it },
+                    profile = profile,
+                    onProfile = { profile = it },
+                    manualGoal = manualGoal,
+                    onManualGoal = { manualGoal = it },
+                )
             }
 
             1 -> {
@@ -101,6 +124,10 @@ fun OnboardingScreen(
                     homeIds =
                         it
                 }
+            }
+
+            3 -> {
+                LockScreenStep(lockScreen) { lockScreen = it }
             }
 
             else -> {
@@ -115,7 +142,21 @@ fun OnboardingScreen(
                 }, modifier = Modifier.weight(1f)) { Text(stringResource(R.string.back)) }
             }
             Button(
-                onClick = { if (step < STEPS - 1) step++ else onFinish(goal, schedule, homeIds) },
+                onClick = {
+                    if (step < STEPS - 1) {
+                        step++
+                    } else {
+                        onFinish(
+                            OnboardingResult(
+                                goalMl = if (calculate) GoalCalculator.recommendedMl(profile) else manualGoal,
+                                profile = profile.takeIf { calculate },
+                                schedule = schedule,
+                                homeIds = homeIds,
+                                progressOnLockScreen = lockScreen,
+                            ),
+                        )
+                    }
+                },
                 modifier = Modifier.weight(1f),
             ) { Text(stringResource(if (step < STEPS - 1) R.string.next else R.string.lets_go)) }
         }
@@ -143,18 +184,61 @@ private fun Title(
 
 @Composable
 private fun GoalStep(
-    goal: Int,
-    onGoal: (Int) -> Unit,
+    calculate: Boolean,
+    onCalculate: (Boolean) -> Unit,
+    profile: BodyProfile,
+    onProfile: (BodyProfile) -> Unit,
+    manualGoal: Int,
+    onManualGoal: (Int) -> Unit,
 ) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
     Title(stringResource(R.string.onboarding_welcome), stringResource(R.string.onboarding_goal_text))
-    Text(Format.litres(goal), fontSize = 40.sp, fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.primary)
-    Slider(
-        value = goal.toFloat(),
-        onValueChange = { onGoal(((it / GOAL_STEP).roundToInt() * GOAL_STEP).coerceIn(MIN_GOAL, MAX_GOAL)) },
-        valueRange = MIN_GOAL.toFloat()..MAX_GOAL.toFloat(),
+    ChoiceChips(
+        options =
+            listOf(
+                true to stringResource(R.string.goal_mode_calculate),
+                false to stringResource(R.string.goal_mode_manual),
+            ),
+        selected = calculate,
+        onSelect = onCalculate,
     )
+    Spacer(Modifier.height(12.dp))
+    if (calculate) {
+        SectionCard { BodyProfileForm(profile, onProfile) }
+    } else {
+        Text(
+            Format.litres(manualGoal),
+            fontSize = 40.sp,
+            fontWeight = FontWeight.Bold,
+            color = MaterialTheme.colorScheme.primary,
+        )
+        Slider(
+            value = manualGoal.toFloat(),
+            onValueChange = { onManualGoal(((it / GOAL_STEP).roundToInt() * GOAL_STEP).coerceIn(MIN_GOAL, MAX_GOAL)) },
+            valueRange = MIN_GOAL.toFloat()..MAX_GOAL.toFloat(),
+        )
+        Text(
+            stringResource(R.string.onboarding_goal_hint),
+            fontSize = 12.sp,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+@Composable
+private fun LockScreenStep(
+    show: Boolean,
+    onShow: (Boolean) -> Unit,
+) = Column(horizontalAlignment = Alignment.CenterHorizontally) {
+    Title(stringResource(R.string.onboarding_lock_title), stringResource(R.string.onboarding_lock_text))
+    ChoiceChips(
+        options = listOf(true to stringResource(R.string.lock_show), false to stringResource(R.string.lock_hide)),
+        selected = show,
+        onSelect = onShow,
+    )
+    Spacer(Modifier.height(8.dp))
     Text(
-        stringResource(R.string.onboarding_goal_hint),
+        stringResource(if (show) R.string.lock_show_hint else R.string.lock_hide_hint),
         fontSize = 12.sp,
         color = MaterialTheme.colorScheme.onSurfaceVariant,
         textAlign = TextAlign.Center,

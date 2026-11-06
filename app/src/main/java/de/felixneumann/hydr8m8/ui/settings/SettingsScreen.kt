@@ -9,10 +9,16 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -23,6 +29,7 @@ import de.felixneumann.hydr8m8.BuildConfig
 import de.felixneumann.hydr8m8.R
 import de.felixneumann.hydr8m8.data.AppSettings
 import de.felixneumann.hydr8m8.data.ThemeMode
+import de.felixneumann.hydr8m8.domain.BodyProfile
 import de.felixneumann.hydr8m8.domain.ReminderSettings
 import de.felixneumann.hydr8m8.domain.Surfaces
 import de.felixneumann.hydr8m8.domain.WeatherRules
@@ -30,6 +37,7 @@ import de.felixneumann.hydr8m8.system.AppLanguage
 import de.felixneumann.hydr8m8.system.Permissions
 import de.felixneumann.hydr8m8.system.rememberPermissionRequest
 import de.felixneumann.hydr8m8.ui.Format
+import de.felixneumann.hydr8m8.ui.components.BodyProfileForm
 import de.felixneumann.hydr8m8.ui.components.ChoiceSettingRow
 import de.felixneumann.hydr8m8.ui.components.NumberSettingRow
 import de.felixneumann.hydr8m8.ui.components.PermissionRows
@@ -50,6 +58,7 @@ fun SettingsScreen(
     updateState: UpdateState,
     onUpdate: SettingsUpdate,
     onSetGoal: (Int) -> Unit,
+    onApplyProfile: (BodyProfile) -> Unit,
     onOpenPresets: () -> Unit,
     onOpenSurface: (String) -> Unit,
     onLocationGrant: () -> Unit,
@@ -69,7 +78,7 @@ fun SettingsScreen(
             fontWeight = FontWeight.Bold,
             modifier = Modifier.padding(top = 8.dp),
         )
-        GoalSection(settings, currentGoalMl, onUpdate, onSetGoal)
+        GoalSection(settings, currentGoalMl, onUpdate, onSetGoal, onApplyProfile)
         AmountsSection(onOpenPresets, onOpenSurface)
         SectionCard(title = stringResource(R.string.section_sleep)) {
             WakeScheduleEditor(settings.schedule, { schedule -> onUpdate { it.copy(schedule = schedule) } })
@@ -92,7 +101,9 @@ private fun GoalSection(
     goalMl: Int,
     onUpdate: SettingsUpdate,
     onSetGoal: (Int) -> Unit,
+    onApplyProfile: (BodyProfile) -> Unit,
 ) {
+    var calculating by remember { mutableStateOf(false) }
     SectionCard(title = stringResource(R.string.section_goal)) {
         NumberSettingRow(
             stringResource(R.string.daily_goal),
@@ -103,6 +114,12 @@ private fun GoalSection(
             onChange = onSetGoal,
             supporting = stringResource(R.string.daily_goal_hint),
         )
+        SettingRow(
+            stringResource(R.string.calculate_goal),
+            "›",
+            { calculating = true },
+            supporting = stringResource(R.string.calculate_goal_hint),
+        )
         TimeSettingRow(
             stringResource(R.string.day_start),
             settings.dayStart,
@@ -110,6 +127,32 @@ private fun GoalSection(
             supporting = stringResource(R.string.day_start_hint),
         )
     }
+    if (calculating) {
+        GoalCalculatorDialog(
+            initial = settings.bodyProfile ?: BodyProfile.DEFAULT,
+            onApply = {
+                onApplyProfile(it)
+                calculating = false
+            },
+            onDismiss = { calculating = false },
+        )
+    }
+}
+
+@Composable
+private fun GoalCalculatorDialog(
+    initial: BodyProfile,
+    onApply: (BodyProfile) -> Unit,
+    onDismiss: () -> Unit,
+) {
+    var profile by remember { mutableStateOf(initial) }
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        title = { Text(stringResource(R.string.calculate_goal)) },
+        text = { BodyProfileForm(profile, { profile = it }, Modifier.verticalScroll(rememberScrollState())) },
+        confirmButton = { TextButton(onClick = { onApply(profile) }) { Text(stringResource(R.string.apply_goal)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
+    )
 }
 
 @Composable
@@ -249,6 +292,13 @@ private fun ExtrasSection(
             settings.liveUpdateEnabled,
             { v -> onUpdate { it.copy(liveUpdateEnabled = v) } },
             supporting = stringResource(R.string.live_update_hint),
+        )
+        SwitchRow(
+            stringResource(R.string.progress_lock_screen),
+            settings.progressOnLockScreen,
+            { v -> onUpdate { it.copy(progressOnLockScreen = v) } },
+            supporting = stringResource(R.string.progress_lock_screen_hint),
+            enabled = settings.liveUpdateEnabled,
         )
         SwitchRow(
             stringResource(R.string.sounds),

@@ -145,8 +145,8 @@
     <string name="hot_from">Hot from</string>
     <string name="hot_bonus">Extra on hot days</string>
     <string name="section_extras">Extras</string>
-    <string name="live_update">Progress on lock screen</string>
-    <string name="live_update_hint">Live progress notification (Now Bar) while you are awake.</string>
+    <string name="live_update">Progress notification</string>
+    <string name="live_update_hint">Live progress in the status bar and on the lock screen while you are awake.</string>
     <string name="sounds">Sound effects</string>
     <string name="sounds_hint">Subtle sounds when logging, reaching the goal and for streaks. Silent in silent/vibrate mode.</string>
     <string name="section_permissions">Permissions</string>
@@ -155,14 +155,14 @@
     <string name="perm_location">Approximate location</string>
     <string name="perm_location_hint">Only for the daily weather bonus.</string>
     <string name="perm_battery">Unrestricted battery use</string>
-    <string name="perm_battery_hint">Keeps Samsung from delaying reminders.</string>
+    <string name="perm_battery_hint">Keeps the system from delaying reminders.</string>
     <string name="granted">Granted</string>
     <string name="grant">Grant</string>
 
     <!-- Onboarding -->
     <string name="onboarding_welcome">Hi, I\'m your Drop Mate!</string>
-    <string name="onboarding_goal_text">How much water do you want to drink per day?</string>
-    <string name="onboarding_goal_hint">Orientation: the EU food safety authority (EFSA) suggests about 1.6 L (women) to 2.0 L (men) from drinks per day. You can change this any time.</string>
+    <string name="onboarding_goal_text">How much water do you want to drink per day? Calculate a recommendation or set it yourself.</string>
+    <string name="onboarding_goal_hint">Default: 2.0 L. Orientation: the EU food safety authority (EFSA) suggests about 1.6 L (women) to 2.0 L (men) from drinks per day. You can change this any time.</string>
     <string name="onboarding_sleep_title">When are you awake?</string>
     <string name="onboarding_sleep_text">Reminders only come while you are awake.</string>
     <string name="onboarding_home_title">Your amounts</string>
@@ -254,11 +254,38 @@
     <string name="update_retry">Try again</string>
     <string name="update_ready_short">Ready to install</string>
     <string name="update_ready_title">Version %1$s downloaded</string>
-    <string name="update_ready_text">The file was checked (signed by Hydr8M8, newer version). Tap \"Open downloads\" and then the file Hydr8M8-….apk – Android installs the update. Your data is kept.</string>
-    <string name="update_open_downloads">Open downloads</string>
+    <string name="update_ready_text">The file was checked (signed by Hydr8M8, newer version) and saved to Documents › Hydr8M8. Tap \"Open folder\" and then the file Hydr8M8-….apk – Android installs the update. Your data is kept.</string>
+    <string name="update_open_downloads">Open folder</string>
     <string name="update_error_network">Could not reach GitHub. Check your internet connection.</string>
     <string name="update_error_untrusted">The download does not come from the official Hydr8M8 repository and was blocked.</string>
     <string name="update_error_download">The download failed. Please try again.</string>
     <string name="update_error_signature">The downloaded file is not signed with the Hydr8M8 key. It was deleted and not installed.</string>
     <string name="update_error_invalid">The downloaded file is not a valid newer Hydr8M8 version. It was deleted.</string>
+    <string name="goal_mode_calculate">Calculate</string>
+    <string name="goal_mode_manual">Set manually</string>
+    <string name="sex_female">Female</string>
+    <string name="sex_male">Male</string>
+    <string name="sex_diverse">Diverse</string>
+    <string name="profile_age" tools:ignore="PluralsCandidate">Age: %1$d years</string>
+    <string name="profile_height">Height: %1$d cm</string>
+    <string name="profile_weight">Weight: %1$d kg</string>
+    <string name="profile_build">Build</string>
+    <string name="build_slim">Slim</string>
+    <string name="build_normal">Normal</string>
+    <string name="build_stocky">Stocky</string>
+    <string name="profile_result">Recommended: %1$s per day</string>
+    <string name="profile_explanation">Based on DGE reference values (ml per kg body weight by age) and EFSA (about 80 % of water from drinks). With a BMI of 30 or more, an adjusted weight from height, sex and build is used. Your data stays on this device.</string>
+    <string name="calculate_goal">Calculate daily goal</string>
+    <string name="calculate_goal_hint">From sex, age, height, weight and build.</string>
+    <string name="apply_goal">Use as goal</string>
+    <string name="onboarding_lock_title">Show on the lock screen?</string>
+    <string name="onboarding_lock_text">Hydr8M8 can show your daily progress as a live notification while you are awake.</string>
+    <string name="lock_show">Yes, show it</string>
+    <string name="lock_hide">No, only after unlocking</string>
+    <string name="lock_show_hint">The lock screen shows only your progress, no details such as mood or alcohol.</string>
+    <string name="lock_hide_hint">The progress stays visible in the notification shade once the phone is unlocked.</string>
+    <string name="progress_lock_screen">Show progress on lock screen</string>
+    <string name="progress_lock_screen_hint">Only the progress, no details such as mood or alcohol.</string>
+    <string name="preset_name_label">Name (optional)</string>
+    <string name="preset_name_placeholder">e.g. My bottle</string>
 </resources>

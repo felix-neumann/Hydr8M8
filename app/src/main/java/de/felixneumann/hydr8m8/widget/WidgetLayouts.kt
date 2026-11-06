@@ -353,7 +353,7 @@ private fun Buttons(
             Button(
                 icon = preset.icon.drawable(),
                 tint = BrandColors.forKind(preset.kind),
-                label = if (compact) shortLabel(preset) else Format.presetLabel(preset),
+                label = if (compact) shortLabel(preset) else Format.presetTitle(preset),
                 palette = palette,
                 action = logAction(preset.id),
                 compact = compact,

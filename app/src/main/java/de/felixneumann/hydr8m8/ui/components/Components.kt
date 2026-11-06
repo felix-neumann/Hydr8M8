@@ -141,12 +141,22 @@ fun PresetTile(
             DrinkIconView(preset.icon, size = 26.dp)
             Spacer(Modifier.size(3.dp))
             Text(
-                Format.presetLabel(preset),
+                Format.presetTitle(preset),
                 fontSize = 11.sp,
                 textAlign = TextAlign.Center,
                 maxLines = 2,
                 color = MaterialTheme.colorScheme.onSurface,
             )
+            if (preset.name != null) {
+                // Named presets still show their amount, smaller.
+                Text(
+                    Format.presetLabel(preset),
+                    fontSize = 10.sp,
+                    textAlign = TextAlign.Center,
+                    maxLines = 1,
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+            }
         }
     }
 }

@@ -91,7 +91,7 @@ fun PresetLibraryScreen(
                         DrinkIconView(preset.icon)
                         Spacer(Modifier.width(12.dp))
                         Column(Modifier.weight(1f)) {
-                            Text(Format.presetLabel(preset))
+                            Text(Format.presetDisplay(preset))
                             Text(
                                 stringResource(preset.icon.label()),
                                 fontSize = 12.sp,
